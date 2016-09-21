@@ -1,5 +1,24 @@
 %clear all data
 
+%define inputs to check error
+N=72727;
+orgxyz=xyzbl(1,:)
+for i=1:N 
+    xyz=xyzbl(i,:);
+    enubl(:,i)=xyz2enu(xyz,orgxyz);
+    
+end
+figure
+plot(1:N,enubl)
+for i=1:N
+    enu=enubl(:,i);
+    xyzpost(:,i)=enu2xyz(enu,orgxyz);
+
+end
+figure
+plot(1:N,(xyzbl-xyzpost'))
+
+rmse=sqrt(sum((xyzbl-xyzpost').^2)/N);
 
 dTBL=gradient(BLGPST);
 dXBL=gradient(BLX);
@@ -13,18 +32,18 @@ estVzBL=(dZBL./dTBL)*1000;
 
 
 dT=gradient(GPST);
-dX=gradient(Xpos);
-dY=gradient(Ypos);
-dZ=gradient(Zpos);
+dX=gradient(X);
+dY=gradient(Y);
+dZ=gradient(Z);
 
 estVx=(dX./dT)*1000;
 estVy=(dY./dT)*1000;
 estVz=(dZ./dT)*1000;
 
 errT=BLGPST-GPST;
-errXpos=Xpos-BLX;
-errYpos=Ypos-BLY;
-errZpos=Zpos-BLZ;
+errXpos=X-BLX;
+errYpos=Y-BLY;
+errZpos=Z-BLZ;
 
 figure 
 plot(BLGPST(1:25),Xpos(1:25))
