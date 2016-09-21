@@ -58,7 +58,7 @@ for i=1:N
     enu(:,i)=xyz2enu(xyz,orgxyz);
     truthenu(:,i)=enu(:,i);
     
-    %find ENU no delay
+    %find ENU 
     xyz=xyzEstP1(:,i);
     orgxyz=xyznom;
     enu(:,i)=xyz2enu(xyz,orgxyz);
