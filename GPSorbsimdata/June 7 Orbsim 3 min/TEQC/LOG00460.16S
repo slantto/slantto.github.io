@@ -1,0 +1,99 @@
+version: teqc  2016Apr1
+
+ SV+---------------------------|-------------------------------|------------+ SV
+ 23|Laaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa| 23
+  4|Laaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa|  4
+ 26|      Laaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa| 26
+ 29|         Laaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa| 29
+Obs|222222333444444444444444444444444444444444444444444444444444444444444444|Obs
+Clk|                                                                        |Clk
+   +---------------------------|-------------------------------|------------+   
+12:41:06.900                                                        12:43:24.100
+2016 Apr  2                                                          2016 Apr  2
+
+*********************
+QC of RINEX  file(s) : LOG00460.16O
+*********************
+
+4-character ID          : 
+Receiver type           : NovAtel GPSCard
+Antenna type            : 
+
+Time of start of window : 2016 Apr  2  12:41:06.900
+Time of  end  of window : 2016 Apr  2  12:43:24.100
+Time line window length : 2.29 minute(s), ticked every 1.0 minute(s)
+Observation interval    : 0.1000 seconds
+Total satellites w/ obs : 4
+NAVSTAR GPS SVs w/o OBS :  1   2   3   5   6   7   8   9  10  11  12  13 
+                          14  15  16  17  18  19  20  21  22  24  25  27  28 
+                          30  31  32 
+Rx tracking capability  : 12 SVs
+Poss. # of obs epochs   :   1373
+Epochs w/ observations  :   1373
+Epochs repeated         :      0  (0.00%)
+Complete observations   :      0
+ Deleted observations   :   5173
+Obs w/ SV duplication   :      0  (within non-repeated epochs)
+Points in MP moving avg : 50
+Mean S1                 : 49.51 (sd=0.50 n=5173)
+No. of Rx clock offsets : 0
+Total Rx clock drift    :  0.000000 ms
+Rate of Rx clock drift  :  0.000 ms/hr
+Avg time between resets : Inf minute(s)
+Freq no. and timecode   : 1 13236 001000
+Report gap > than       : 10.00 minute(s)
+       but < than       : 90.00 minute(s)
+epochs w/ msec clk slip : 0
+other msec mp events    : 0 (: 0)   {expect ~= 1:50}
+IOD signifying a slip   : >400.0 cm/minute
+IOD slips               :      0
+IOD or MP slips         :      0
+      first epoch    last epoch    hrs   dt  #expt  #have   %   mp1   mp2 o/slps
+SUM 16  4  2 12:41 16  4  2 12:43 .0381 .10     -       0  -     -     -       0
+
+
+
+Processing parameters are:
+Receiver tracking capability       : 12 SVs
+Maximum ionospheric rate (L1)      : 400.00 cm/min
+Report data gap greater than       : 10.00 min
+               but less than       : 90.00 min
+Multipath slip sigma threshold     : 4.00 sigma
+% increase in MP rms for C/A | A/S : 100.00 %
+Points in MP moving averages       : 50
+Minimum signal to noise for L1     : 4
+Width of ASCII summary plot        : 72
+Data indicators on summary plot    : yes
+Do ionospheric observable          : yes
+Do ionospheric derivative          : yes
+Do multipath observables           : yes
+Do 1-ms receiver clock slips       : yes
+Tolerance for 1-ms clock slips     : 1.00e-002 ms
+Do receiver LLI slips              : yes
+Do plot file(s)                    : no
+
+Observations start   : 2016 Apr  2 12:41:06.900
+Observations  end    : 2016 Apr  2 12:43:24.100
+Observation interval : 0.1000 second(s)
+
+ SV  #+hor <ele> #+mask <ele> #reprt #compl    L1     L2     P1     P2     C1     C2
+--- ------ ----- ------ ----- ------ ------ ------ ------ ------ ------ ------ ------
+G23*     0  0.00      0  0.00   1373      0   1373      0      0      0   1373      0
+G04*     0  0.00      0  0.00   1367      0   1367      0      0      0   1367      0
+G26*     0  0.00      0  0.00   1244      0   1244      0      0      0   1244      0
+G29*     0  0.00      0  0.00   1189      0   1189      0      0      0   1189      0
+   * = SV with no NAV info (or not being used)
+Obs reported w/ code | phase  :   5173
+Obs deleted (any reason)      :   5173
+Obs complete                  :      0
+
+                                |  G  |
+% Obs            w/ no L1     :   0.0
+
+% Obs            w/ no C1     :   0.0
+
+% Obs            w/ low L1 S/N:   0.0
+
+No. of Rx clock offsets : 0
+Total Rx clock drift    :  0.000000 ms
+Rate of Rx clock drift  :  0.000000 ms/hr

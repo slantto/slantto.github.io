@@ -1,0 +1,132 @@
+version: teqc  2016Apr1
+
+ SV+-------|-----------------|------------------|------------------|--------+ SV
+  9|aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa|  9
+ 29|Laaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa| 29
+ 25|                      LaIIIIII                                Laaaaaaaaa| 25
+Obs|222222222222222222222233333333222222222222222222222222222222223333333333|Obs
+Clk|                                                                        |Clk
+   +-------|-----------------|------------------|------------------|--------+   
+12:46:37.100                                                        12:50:27.600
+2016 Apr  2                                                          2016 Apr  2
+
+*********************
+QC of RINEX  file(s) : LOG00362.16o
+*********************
+
+4-character ID          : 
+Receiver type           : NovAtel GPSCard
+Antenna type            : 
+
+Time of start of window : 2016 Apr  2  12:46:37.100
+Time of  end  of window : 2016 Apr  2  12:50:27.600
+Time line window length : 3.84 minute(s), ticked every 1.0 minute(s)
+Observation interval    : 0.1000 seconds
+Total satellites w/ obs : 3
+NAVSTAR GPS SVs w/o OBS :  1   2   3   4   5   6   7   8  10  11  12  13 
+                          14  15  16  17  18  19  20  21  22  23  24  26  27 
+                          28  30  31  32 
+Rx tracking capability  : 12 SVs
+Poss. # of obs epochs   :   2306
+Epochs w/ observations  :   2306
+Epochs repeated         :      0  (0.00%)
+Complete observations   :     74
+ Deleted observations   :   5084
+Obs w/ SV duplication   :      0  (within non-repeated epochs)
+Moving average MP12     : 0.992698 m
+Moving average MP21     : 3.066774 m
+Points in MP moving avg : 50
+Mean S1                 : 49.67 (sd=0.54 n=5158)
+Mean S2                 : 20.32 (sd=0.83 n=74)
+No. of Rx clock offsets : 0
+Total Rx clock drift    :  0.000000 ms
+Rate of Rx clock drift  :  0.000 ms/hr
+Avg time between resets : Inf minute(s)
+Freq no. and timecode   : 2 13236 001000
+Report gap > than       : 10.00 minute(s)
+       but < than       : 90.00 minute(s)
+epochs w/ msec clk slip : 0
+other msec mp events    : 0 (: 8)   {expect ~= 1:50}
+IOD signifying a slip   : >400.0 cm/minute
+IOD slips               :     40
+IOD or MP slips         :     40
+      first epoch    last epoch    hrs   dt  #expt  #have   %   mp1   mp2 o/slps
+SUM 16  4  2 12:46 16  4  2 12:50 .0641 .10     -      74  -   0.99  3.07      2
+
+
+
+Processing parameters are:
+Receiver tracking capability       : 12 SVs
+Maximum ionospheric rate (L1)      : 400.00 cm/min
+Report data gap greater than       : 10.00 min
+               but less than       : 90.00 min
+Expected rms of MP12 multipath     : 65.00 cm
+Expected rms of MP21 multipath     : 65.00 cm
+Multipath slip sigma threshold     : 4.00 sigma
+% increase in MP rms for C/A | A/S : 100.00 %
+Points in MP moving averages       : 50
+Minimum signal to noise for L1     : 4
+Minimum signal to noise for L2     : 4
+Width of ASCII summary plot        : 72
+Data indicators on summary plot    : yes
+Do ionospheric observable          : yes
+Do ionospheric derivative          : yes
+Do multipath observables           : yes
+Do 1-ms receiver clock slips       : yes
+Tolerance for 1-ms clock slips     : 1.00e-002 ms
+Do receiver LLI slips              : yes
+Do plot file(s)                    : no
+
+Observations start   : 2016 Apr  2 12:46:37.100
+Observations  end    : 2016 Apr  2 12:50:27.600
+Observation interval : 0.1000 second(s)
+
+ SV  #+hor <ele> #+mask <ele> #reprt #compl    L1     L2     P1     P2     C1     C2
+--- ------ ----- ------ ----- ------ ------ ------ ------ ------ ------ ------ ------
+G09*     0  0.00      0  0.00   2306      0   2306      0      0      0   2306      0
+G29*     0  0.00      0  0.00   2305      0   2305      0      0      0   2305      0
+G25*     0  0.00      0  0.00    547     74    547     74      0     74    547      0
+   * = SV with no NAV info (or not being used)
+Obs reported w/ code | phase  :   5158
+Obs deleted (any reason)      :   5084
+Obs complete                  :     74
+
+                                |  G  |
+% Obs            w/ no L1     :   0.0
+% Obs            w/ no L2     :  98.6
+
+% Obs            w/ no P2     :  98.6
+% Obs            w/ no C1     :   0.0
+
+% Obs            w/ low L1 S/N:   0.0
+% Obs            w/ low L2 S/N:   1.4
+
+No. of Rx clock offsets : 0
+Total Rx clock drift    :  0.000000 ms
+Rate of Rx clock drift  :  0.000000 ms/hr
+
+MP12 RMS summary (per SV):
+
+                                      slips  L1 rx  L2 rx
+ SV    obs   # del <elev> MP12 rms [m]  all    all    all
+G25*   547    473    0.00  0.992698      4      2      2
+   * = SV with no NAV info (or not being used)
+
+mean MP12 rms        :  0.992698 m
+# MP12 obs           :     74
+# MP12 slips         :      4
+# Rvr L1 slips       :      2
+# Rvr L2 slips       :      2
+
+MP21 RMS summary (per SV):
+
+                                      slips  L1 rx  L2 rx
+ SV    obs   # del <elev> MP21 rms [m]  all    all    all
+G25*   547    473    0.00  3.066774      4      2      6
+   * = SV with no NAV info (or not being used)
+
+mean MP21 rms        :  3.066774 m
+# MP21 obs           :     74
+# MP21 slips         :      4
+# Rvr L1 slips       :      2
+# Rvr L2 slips       :      6

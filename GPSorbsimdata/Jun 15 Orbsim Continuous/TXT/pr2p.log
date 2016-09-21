@@ -1,0 +1,46 @@
+***************************************************************************
+******   pr2p : when a couple of meters either way is no big deal.   ******
+***************************************************************************
+   
+Run time   : Mon Aug 22 11:12:17 2016 
+Host       : zeus 
+Input file : RnovaRinex.obs 
+Data type  : C1 
+invocation : /opt/goa-6.4/bin/pr2p -i RnovaRinex.obs -orb_clk flinnR /home/zeus/binaryJune14BaselineTest/flinnR/ -r .1 -dtype C1 
+   
+Number of epochs analyzed     : 11455 
+Number of failed epoch solves : 12     (  0.1%  of epochs) 
+Number of data per epoch (avg/min/max) : (8/1/12) 
+   
+Average Position, (x,y,z), in km:  -3699.243186  -1685.433743   4983.192445 
+Position Scatter, (x,y,z), in km:   1593.255041   1021.840833   1539.135482 
+   
+------------------------
+---   OUTLIER INFO   ---
+------------------------
+Number of epochs with outliers: 0     (  0.0%  of epochs) 
+   
+-------------------------
+---   RESIDUAL INFO   ---
+-------------------------
+Number of residuals       : 86711 
+Average residual (meters) : 1.892769 
+Standard deviation of residuals (meters) : 1.676067 
+Maximum residual (meters) : 6.369611 
+Minimum residual (meters) : 0.000000 
+Residuals associated with each transmitter (num, avg in meters) : 
+   GPS47 : 4205 residuals : avg resid is 5.209831 meters 
+   GPS71 : 2075 residuals : avg resid is 4.631477 meters 
+   GPS69 : 86 residuals : avg resid is 3.879269 meters 
+   GPS70 : 4274 residuals : avg resid is 3.393346 meters 
+   GPS63 : 9914 residuals : avg resid is 3.049111 meters 
+   GPS41 : 4261 residuals : avg resid is 2.622126 meters 
+   GPS46 : 11294 residuals : avg resid is 2.432496 meters 
+   GPS66 : 4856 residuals : avg resid is 1.725643 meters 
+   GPS56 : 4253 residuals : avg resid is 1.486221 meters 
+   GPS45 : 8941 residuals : avg resid is 1.453666 meters 
+   GPS54 : 11064 residuals : avg resid is 0.700482 meters 
+   GPS72 : 9528 residuals : avg resid is 0.691242 meters 
+   GPS73 : 8691 residuals : avg resid is 0.644756 meters 
+   GPS52 : 195 residuals : avg resid is 0.544541 meters 
+   GPS65 : 3074 residuals : avg resid is 0.374487 meters 

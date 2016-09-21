@@ -1,0 +1,32 @@
+     2.10           OBSERVATION DATA    G (GPS)             RINEX VERSION / TYPE
+Convert v1.8.0                          09-Jun-2016 14:45   PGM / RUN BY / DATE 
+Signal Strength values S1,S2 are in dBHz                    COMMENT             
+                                                            MARKER NAME         
+                                                            MARKER NUMBER       
+                                                            OBSERVER / AGENCY   
+                    NovAtel GPSCard                         REC # / TYPE / VERS 
+                                                            ANT # / TYPE        
+0.0000        0.0000        0.0000                          APPROX POSITION XYZ 
+        0.0000        0.0000        0.0000                  ANTENNA: DELTA H/E/N
+     1     0                                                WAVELENGTH FACT L1/2
+     1     0     2   G06   G20                              WAVELENGTH FACT L1/2
+                                                            COMMENT             
+                                                            COMMENT             
+                                                            COMMENT             
+                                                            COMMENT             
+                                                            COMMENT             
+                                                            COMMENT             
+     4    C1    L1    D1    S1                              # / TYPES OF OBSERV 
+     0.100                                                  INTERVAL            
+  2016    04    02    13    11     6.6000000    GPS         TIME OF FIRST OBS   
+  2016    04    02    13    11     6.8000000    GPS         TIME OF LAST OBS    
+Leap Seconds Unknown                                        COMMENT             
+                                                            END OF HEADER       
+ 16 04 02 13 11  6.6000000  0  2G06G20                                          
+  26266765.80549 138032785.35559    -13584.59049        48.000  
+  24489527.15649 128693332.43859     -9699.38349        50.000  
+ 16 04 02 13 11  6.7000000  0  2G06G20                                          
+  26267024.32849 138034143.89549    -13586.10549        48.000  
+  24489711.78149 128694302.63349     -9704.34849        50.000  
+ 16 04 02 13 11  6.8000000  0  1G20                                             
+  24489896.49249 128695273.32449     -9709.35949        50.000  
