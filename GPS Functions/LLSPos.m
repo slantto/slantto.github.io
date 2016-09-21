@@ -11,12 +11,12 @@ for k=1:Nsats
     prComp(k)=norm(Satxyz(k,:)-nomXYZ)+clockBiasNom*c;
     uNom2Sat(k,:)=(Satxyz(k,:)-nomXYZ)/norm(Satxyz(k,:)-nomXYZ);
     if trop==1
-       prComp(k)=prComp(k)+mel*TropSaastamoinen(llh,Po,To,eo);
+        prComp(k)=prComp(k)+mel(k)*TropSaastamoinen(llh,Po,To,eo);
     end
 end
 
-%Estimate position
 
+%Estimate position without atmosphere
 G=horzcat(-uNom2Sat,ones(Nsats,1)); %form geometery matrix for each epoch
 H=inv(G'*W*G);
 
@@ -30,7 +30,6 @@ clockBiasEst=clockBiasNom+(dX(4)/c);
 PDOP=sqrt(H(1,1)+H(2,2)+H(3,3));
 TDOP=sqrt(H(4,4));
 GDOP=trace(H);
-
 
 
 

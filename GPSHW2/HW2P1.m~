@@ -46,7 +46,7 @@ for i=1:N
     
     
     %Use function LLSPos to get xyz estimate at each epoch
-    [xyzEstP1(:,i),clockBiasEstP1(:,i),PDOP(:,i),TDOP(:,i),GDOP(:,i)]=LLSPos(Satxyz,pr,nomXYZ,clockBiasNom,Nsats,c,W,trop,ion,mel,llh,Po,To,eo);
+    [xyzEstP1(:,i),xyzEstTP1(:,i),xyzEstIP1(:,i),xyzEstTIP1(:,i),clockBiasEstP1(:,i),clockBiasEstT,clockBiasEstIP1,clockBiasEstTIP1(:,i),PDOP(:,i),TDOP(:,i),GDOP(:,i)]=LLSPos(Satxyz,pr,nomXYZ,clockBiasNom,Nsats,c,W,trop,ion,mel,llh,Po,To,eo);
     %substitute xyz estimate for epoch i to be xyz nom for epoch i+1
     nomXYZ=xyzEstP1(:,i)';
     clockBiasNom=clockBiasEstP1(:,i)';
@@ -64,7 +64,28 @@ for i=1:N
     enu(:,i)=xyz2enu(xyz,orgxyz);
     estenuP1(:,i)=enu(:,i);
     
-   
+    if (xyzEstTP1)
+    %find ENU w/ trop
+    xyz=xyzEstTP1(:,i);
+    orgxyz=xyznom;
+    enu(:,i)=xyz2enu(xyz,orgxyz);
+    estenuP1(:,i)=enu(:,i);
+    
+    elseif (xyzEstIP1)
+    %find ENU w/ iono
+    xyz=xyzEstIP1(:,i);
+    orgxyz=xyznom;
+    enu(:,i)=xyz2enu(xyz,orgxyz);
+    estenuP1(:,i)=enu(:,i);
+    
+    elseif (xyzEstTIP1)
+    %find ENU w/ trop&iono
+    xyz=xyzEstTIP1(:,i);
+    orgxyz=xyznom;
+    enu(:,i)=xyz2enu(xyz,orgxyz);
+    estenuP1(:,i)=enu(:,i);
+    
+    end
     
 end
 
@@ -100,7 +121,31 @@ for i=1:N
     enu(:,i)=xyz2enu(xyz,orgxyz);
     estenuP2(:,i)=enu(:,i);
     
-   
+    if (xyzEstTP2)
+        
+    %find ENU w/ trop
+    xyz=xyzEstTP2(:,i);
+    orgxyz=xyznom;
+    enu(:,i)=xyz2enu(xyz,orgxyz);
+    estenuP1(:,i)=enu(:,i);
+    
+    elseif (xyzEstIP2)
+        
+    %find ENU w/ iono
+    xyz=xyzEstIP2(:,i);
+    orgxyz=xyznom;
+    enu(:,i)=xyz2enu(xyz,orgxyz);
+    estenuP1(:,i)=enu(:,i);
+    
+    elseif (xyzEstTIP2)
+        
+    %find ENU w/ trop&iono
+    xyz=xyzEstTIP2(:,i);
+    orgxyz=xyznom;
+    enu(:,i)=xyz2enu(xyz,orgxyz);
+    estenuP1(:,i)=enu(:,i);
+    
+    end
     
 end
 
