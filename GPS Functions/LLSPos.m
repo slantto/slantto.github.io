@@ -1,4 +1,4 @@
-function [xyzEst,clockBiasEst,PDOP,TDOP,GDOP]=LLSPos(Satxyz,pr,nomXYZ,clockBiasNom,Nsats,c,W,trop,ion,mel,llh,Po,To,eo)
+function [xyzEst,clockBiasEst,PDOP,TDOP,GDOP,preFit,postFit]=LLSPos(Satxyz,pr,nomXYZ,clockBiasNom,Nsats,c,W,trop,ion,mel,llh,Po,To,eo)
 %Linear Least Squares positioning
 %Sean Lantto
 
@@ -30,7 +30,8 @@ clockBiasEst=clockBiasNom+(dX(4)/c);
 PDOP=sqrt(H(1,1)+H(2,2)+H(3,3));
 TDOP=sqrt(H(4,4));
 GDOP=trace(H);
-
+preFit=deltaRho;
+postFit=pinv(H')*H'*H*dX;
 
 
 end
