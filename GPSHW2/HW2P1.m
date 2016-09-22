@@ -23,9 +23,13 @@ else
 end
 
 ion=input('Include Ionosphere delay(1 for yes, 0 for no)');
-% if ion==1
-%     tod
-% end
+if ion==1
+    A1=input('define A1(sec)');
+    A2=input('define A2(sec)');
+    A3=input('define A3(sec)');
+    A4=input('define A4(sec)');
+    t=
+end
 
 %For P1 data
 for i=1:N
