@@ -14,8 +14,8 @@ for k=1:Nsats
         prComp(k)=prComp(k)+mel(k)*TropSaastamoinen(llh,Po,To,eo);
     end
     if ion==1
-        OFk=1+16*(0.54-(el(k)/180));
-        prComp(k)=prComp(k)+OFk*Iono(A1,A2,A3,A4,t,c);
+        OFi=1+16*(0.54-(el(k)/180)
+       prcomp(k)=prcomp(k)+ 
     end
 end
 

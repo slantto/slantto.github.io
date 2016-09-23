@@ -28,7 +28,13 @@ if ion==1
     A2=input('define A2(sec)');
     A3=input('define A3(sec)');
     A4=input('define A4(sec)');
-    t=
+    timeoffset=input('How many hours since begining of gps week?');
+    timeoffset=timeoffset*3600; %convert to seconds
+else
+    A1=0;
+    A2=0;
+    A3=0;
+    A4=0;
 end
 
 %For P1 data
@@ -39,6 +45,11 @@ for i=1:N
     Nsats=nSat(i);
     W=zeros(nSat(i));
     llh=xyz2llh(xyz);
+    if ion==1
+        t=mod(time(i),86400)+timeoffset;
+    else
+        t=0;
+    end
     %Create weight matrix
     for x=1:nSat(i)
         Satenu(x,:)=xyz2enu(Satxyz(x,:),xyznom);
@@ -50,7 +61,7 @@ for i=1:N
     
     
     %Use function LLSPos to get xyz estimate at each epoch
-    [xyzEstP1(:,i),clockBiasEstP1(:,i),PDOP(:,i),TDOP(:,i),GDOP(:,i),preFit,postFit]=LLSPos(Satxyz,pr,nomXYZ,clockBiasNom,Nsats,c,W,trop,ion,mel,llh,Po,To,eo);
+    [xyzEstP1(:,i),clockBiasEstP1(:,i),PDOP(:,i),TDOP(:,i),GDOP(:,i),preFit,postFit]=LLSPos(Satxyz,pr,nomXYZ,clockBiasNom,Nsats,c,W,trop,ion,mel,llh,Po,To,eo,A1,A2,A3,A4,t,el(:,i));
     %substitute xyz estimate for epoch i to be xyz nom for epoch i+1
     nomXYZ=xyzEstP1(:,i)';
     clockBiasNom=clockBiasEstP1(:,i)';
@@ -76,41 +87,4 @@ end
 figure
 plot(1:N,(estenuP1-truthenu))
 
-xyz=nomXYZ;
-%For P2 data
-for i=1:N
-    %Seperate out pseudorange and Satxyz for epoch i
-    pr=prDataP2(1:nSat(i),i);
-    Satxyz=satsXYZ(1:nSat(i),:,i);
-    Nsats=nSat(i);
-    W=zeros(nSat(i));
-    llh=xyz2llh(xyz);
-    %Create weight matrix
-    for x=1:nSat(i)
-        Satenu(x,:)=xyz2enu(Satxyz(x,:),xyznom);
-        sinel(x,:)=(Satenu(x,3))/(norm(Satenu(x,:)));
-        el(x,i)=asind(sinel(x,:));
-        W(x,x)=sinel(x,:);
-    end
-    %Use function LLSPos to get xyz estimate at each epoch
-    [xyzEstP2(:,i),clockBiasEstP2(:,i),PDOP(:,i),TDOP(:,i),GDOP(:,i)]=LLSPos(Satxyz,pr,nomXYZ,clockBiasNom,Nsats,c,W,trop,ion,mel,llh,Po,To,eo);
-    %substitute xyz estimate for epoch i to be xyz nom for epoch i+1
-    nomXYZ=xyzEstP2(:,i)';
-    clockBiasNom=clockBiasEstP2(:,i)';
-    
-    
-    xyz=xyzEstP2(:,i);
-    orgxyz=xyznom;
-    enu(:,i)=xyz2enu(xyz,orgxyz);
-    estenuP2(:,i)=enu(:,i);
-    
-   
-    
-end
 
-figure
-plot(1:N,(estenuP2-truthenu))
-
-
-figure
-plot(1:N,(estenuP1-estenuP2))
