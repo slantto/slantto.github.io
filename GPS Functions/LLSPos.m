@@ -1,4 +1,4 @@
-function [xyzEst,clockBiasEst,PDOP,TDOP,GDOP,preFit,postFit]=LLSPos(Satxyz,pr,nomXYZ,clockBiasNom,Nsats,c,W,trop,ion,mel,llh,Po,To,eo,A1,A2,A3,A4,t,el)
+function [xyzEst,clockBiasEst,PDOP,TDOP,GDOP,preFit,postFit]=LLSPos(Satxyz,pr,nomXYZ,clockBiasNom,Nsats,c,W,trop,ion,mel,llh,Po,To,eo,A1,A2,A3,A4,t,el,klo,tshell,ionfree)
 %Linear Least Squares positioning
 %Sean Lantto
 
@@ -14,8 +14,15 @@ for k=1:Nsats
         prComp(k)=prComp(k)+mel(k)*TropSaastamoinen(llh,Po,To,eo);
     end
     if ion==1
+        if klo==1
         OFk=1+16*(0.54-(el(k)/180));
         prComp(k)=prComp(k)+OFk*Iono(A1,A2,A3,A4,t,c);
+        
+        elseif tshell==1
+        
+        elseif ionfree==1
+        
+        end
     end
 end
 
