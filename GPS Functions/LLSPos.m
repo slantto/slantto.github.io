@@ -1,4 +1,4 @@
-function [xyzEst,clockBiasEst,PDOP,TDOP,GDOP,preFit,postFit]=LLSPos(Satxyz,pr,nomXYZ,clockBiasNom,Nsats,c,W,trop,ion,mel,llh,Po,To,eo,A1,A2,A3,A4,t,el,klo,tshell,ionfree)
+function [xyzEst,clockBiasEst,PDOP,TDOP,GDOP,prefit,postFit]=LLSPos(Satxyz,pr,nomXYZ,clockBiasNom,Nsats,c,W,trop,ion,mel,llh,Po,To,eo,A1,A2,A3,A4,t,el,klo,tshell,ionfree)
 %Linear Least Squares positioning
 %Sean Lantto
 
@@ -15,13 +15,15 @@ for k=1:Nsats
     end
     if ion==1
         if klo==1
-        OFk=1+16*(0.54-(el(k)/180));
-        prComp(k)=prComp(k)+OFk*Iono(A1,A2,A3,A4,t,c);
-        
+            OFk=1+16*(0.54-(el(k)/180));
+            prComp(k)=prComp(k)+OFk*Iono(A1,A2,A3,A4,t,c);
+            
         elseif tshell==1
-        
-        elseif ionfree==1
-        
+            Rearth=6367444.5; %radius earth in meters
+            hi=350000; %assumed mean of the ionosphere in meters
+            zenangle=90-el(k); %zenith angle for satellite k
+            OFtshell=1/(sqrt(1-(((Rearth*sind(zenangle))/(Rearth+hi))^2)));
+            prComp(k)=prComp(k)+OFtshell*Iono(A1,A2,A3,A4,t,c);
         end
     end
 end
@@ -41,7 +43,9 @@ clockBiasEst=clockBiasNom+(dX(4)/c);
 PDOP=sqrt(H(1,1)+H(2,2)+H(3,3));
 TDOP=sqrt(H(4,4));
 GDOP=trace(H);
-preFit=deltaRho;
+
+prefit=deltaRho;
+
 postFit=pinv(H')*H'*H*dX;
 
 
