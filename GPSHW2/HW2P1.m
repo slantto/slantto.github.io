@@ -3,7 +3,7 @@
 
 clear all
 
-load('dataSet4.mat')
+load('dataSet3.mat')
 
 %Setting Constants
 N=2400; %number of epochs
@@ -101,11 +101,7 @@ for i=1:N
     enu(:,i)=xyz2enu(xyz,orgxyz);
     estenu(:,i)=enu(:,i);
     
-    RMSEenu(1,i)=sqrt(mean((estenu(1,i)-truthenu(1,i)).^2));
-    RMSEenu(2,i)=sqrt(mean((estenu(2,i)-truthenu(2,i)).^2));
-    RMSEenu(3,i)=sqrt(mean((estenu(3,i)-truthenu(3,i)).^2));
-    RMSEclkB(i)=sqrt(mean((clockBiasEst(i)-(truthClockBias(i)/c)).^2));
-    RMSE3d(:,i)=sqrt(mean((estenu(:,i)-truthenu(:,i)).^2));
+    
     
 end
 
@@ -125,23 +121,11 @@ ylabel('error(s)')
 xlabel('epoch')
 title('Estimated clock bias error(DataSet4)')
 
-figure
-subplot(311)
-plot(1:N,RMSEenu)
-ylabel('error(m)')
-xlabel('epoch')
-legend('E','N','U')
-title('RMSE ENU(DataSet4)')
-subplot(312)
-plot(1:N,RMSE3d)
-ylabel('error(m)')
-xlabel('epoch')
-title('RMSE 3D(DataSet4)')
-subplot(313)
-plot(1:N,RMSEclkB)
-ylabel('error(s)')
-xlabel('epoch')
-title('RMSE Clock Bias(DataSet4)')
+RMSEenu(1)=sqrt(mean((estenu(1,:)-truthenu(1,:)).^2));
+RMSEenu(2)=sqrt(mean((estenu(2,:)-truthenu(2,:)).^2));
+RMSEenu(3)=sqrt(mean((estenu(3,:)-truthenu(3,:)).^2));
+RMSEclkB=sqrt(mean((clockBiasEst-(truthClockBias/c)).^2));
+RMSE3d=sqrt(mean((estenu-truthenu).^2));
 
 figure
 plot(1:N,(prDataP1-prDataP2))
