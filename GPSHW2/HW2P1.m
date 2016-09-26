@@ -103,7 +103,7 @@ for i=1:N
     RMSEenu(1,i)=sqrt(mean((estenu(1,i)-truthenu(1,i)).^2));
     RMSEenu(2,i)=sqrt(mean((estenu(2,i)-truthenu(2,i)).^2));
     RMSEenu(3,i)=sqrt(mean((estenu(3,i)-truthenu(3,i)).^2));
-    RMSEclkB(i)=sqrt(mean((clockBiasEst(i)-truthClockBias(i)).^2));
+    RMSEclkB(i)=sqrt(mean((clockBiasEst(i)-(truthClockBias(i)/c)).^2));
     RMSE3d(:,i)=sqrt(mean((estenu(:,i)-truthenu(:,i)).^2));
     
 end
@@ -111,19 +111,39 @@ end
 %plot enu error
 figure
 diffenu=(estenu-truthenu);
-diffclkB=clockBiasEst-truthClockBias;
+diffclkB=clockBiasEst-(truthClockBias/c);
 subplot(211)
 plot(1:N,diffenu)
+ylabel('error(m)')
+xlabel('epoch')
+legend('E','N','U')
+title('Estimated ENU error(DataSet4)')
 subplot(212)
 plot(1:N,diffclkB)
+ylabel('error(s)')
+xlabel('epoch')
+title('Estimated clock bias error(DataSet4)')
 
 figure
 subplot(311)
 plot(1:N,RMSEenu)
+ylabel('error(m)')
+xlabel('epoch')
+legend('E','N','U')
+title('RMSE ENU(DataSet4)')
 subplot(312)
 plot(1:N,RMSE3d)
+ylabel('error(m)')
+xlabel('epoch')
+title('RMSE 3D(DataSet4)')
 subplot(313)
 plot(1:N,RMSEclkB)
+ylabel('error(s)')
+xlabel('epoch')
+title('RMSE Clock Bias(DataSet4)')
 
 figure
 plot(1:N,(prDataP1-prDataP2))
+ylabel('error(m)')
+xlabel('epoch')
+title('Difference in observed pseudorange on L1 and L2(DataSet4)')
