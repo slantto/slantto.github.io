@@ -3,7 +3,7 @@
 
 clear all
 
-load('dataSet3.mat')
+load('dataSet4.mat')
 
 %Setting Constants
 N=2400; %number of epochs
@@ -81,7 +81,11 @@ for i=1:N
     end
     
     %Use function LLSPos to get xyz estimate at each epoch;
+<<<<<<< HEAD
     [xyzEst(:,i),clockBiasEst(:,i),PDOP(:,i),TDOP(:,i),GDOP(:,i),prefit,postFit(:,i),TECU(:,i)]=LLSPos(Satxyz,pr,nomXYZ,clockBiasNom,Nsats,c,W,trop,ion,mel,llh,Po,To,eo,A1,A2,A3,A4,t,el(:,i),klo,tshell,ionfree);
+=======
+    [xyzEst(:,i),clockBiasEst(:,i),PDOP(:,i),TDOP(:,i),GDOP(:,i),prefit,postFit(:,i)]=LLSPos(Satxyz,pr,nomXYZ,clockBiasNom,Nsats,c,W,trop,ion,mel,llh,Po,To,eo,A1,A2,A3,A4,t,el(:,i),klo,tshell,ionfree);
+>>>>>>> 49326cf997cebea9f2b27102cea3d6b0bc877ad6
     %substitute xyz estimate for epoch i to be xyz nom for epoch i+1
     nomXYZ=xyzEst(:,i)';
     clockBiasNom=clockBiasEst(:,i)';
@@ -100,8 +104,17 @@ for i=1:N
     orgxyz=xyznom;
     enu(:,i)=xyz2enu(xyz,orgxyz);
     estenu(:,i)=enu(:,i);
+<<<<<<< HEAD
     
     
+=======
+    
+    RMSEenu(1,i)=sqrt(mean((estenu(1,i)-truthenu(1,i)).^2));
+    RMSEenu(2,i)=sqrt(mean((estenu(2,i)-truthenu(2,i)).^2));
+    RMSEenu(3,i)=sqrt(mean((estenu(3,i)-truthenu(3,i)).^2));
+    RMSEclkB(i)=sqrt(mean((clockBiasEst(i)-(truthClockBias(i)/c)).^2));
+    RMSE3d(:,i)=sqrt(mean((estenu(:,i)-truthenu(:,i)).^2));
+>>>>>>> 49326cf997cebea9f2b27102cea3d6b0bc877ad6
     
 end
 
@@ -121,11 +134,31 @@ ylabel('error(s)')
 xlabel('epoch')
 title('Estimated clock bias error(DataSet4)')
 
+<<<<<<< HEAD
 RMSEenu(1)=sqrt(mean((estenu(1,:)-truthenu(1,:)).^2));
 RMSEenu(2)=sqrt(mean((estenu(2,:)-truthenu(2,:)).^2));
 RMSEenu(3)=sqrt(mean((estenu(3,:)-truthenu(3,:)).^2));
 RMSEclkB=sqrt(mean((clockBiasEst-(truthClockBias/c)).^2));
 RMSE3d=sqrt(mean((estenu-truthenu).^2));
+=======
+figure
+subplot(311)
+plot(1:N,RMSEenu)
+ylabel('error(m)')
+xlabel('epoch')
+legend('E','N','U')
+title('RMSE ENU(DataSet4)')
+subplot(312)
+plot(1:N,RMSE3d)
+ylabel('error(m)')
+xlabel('epoch')
+title('RMSE 3D(DataSet4)')
+subplot(313)
+plot(1:N,RMSEclkB)
+ylabel('error(s)')
+xlabel('epoch')
+title('RMSE Clock Bias(DataSet4)')
+>>>>>>> 49326cf997cebea9f2b27102cea3d6b0bc877ad6
 
 figure
 plot(1:N,(prDataP1-prDataP2))

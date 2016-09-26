@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 function [xyzEst,clockBiasEst,PDOP,TDOP,GDOP,prefit,postFit,TECU]=LLSPos(Satxyz,pr,nomXYZ,clockBiasNom,Nsats,c,W,trop,ion,mel,llh,Po,To,eo,A1,A2,A3,A4,t,el,klo,tshell,ionfree)
+=======
+function [xyzEst,clockBiasEst,PDOP,TDOP,GDOP,prefit,postFit]=LLSPos(Satxyz,pr,nomXYZ,clockBiasNom,Nsats,c,W,trop,ion,mel,llh,Po,To,eo,A1,A2,A3,A4,t,el,klo,tshell,ionfree)
+>>>>>>> 49326cf997cebea9f2b27102cea3d6b0bc877ad6
 %Linear Least Squares positioning
 %Sean Lantto
 
@@ -17,10 +21,15 @@ for k=1:Nsats
         if klo==1
             OFk=1+16*(0.54-(el(k)/180));
             prComp(k)=prComp(k)+OFk*Iono(A1,A2,A3,A4,t,c);
+<<<<<<< HEAD
             TEC=Iono(A1,A2,A3,A4,t,c)*(1575420000^2)/40.3;
             TECU=(TEC*OFk)/(10^16);
         elseif tshell==1
             TECU=0;
+=======
+            
+        elseif tshell==1
+>>>>>>> 49326cf997cebea9f2b27102cea3d6b0bc877ad6
             Rearth=6367444.5; %radius earth in meters
             hi=350000; %assumed mean of the ionosphere in meters
             zenangle=90-el(k); %zenith angle for satellite k
