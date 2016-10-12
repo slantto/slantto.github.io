@@ -1,0 +1,51 @@
+%state-vector  x=[delta-x, delta-y, delta-z, clock bias, clock drift, Vx, Vy, Vz, Troposphere]
+
+%assume delta is zero intially
+x=[0 0 0 0 0 0 0 0 0]';
+
+% initiallize uncertainty
+P=[1000^2 0 0 0 0 0 0 0 0;
+    0 1000^2 0 0 0 0 0 0 0;
+    0 0 1000^2 0 0 0 0 0 0;
+    0 0 0 100000^2 0 0 0 0 0;
+    0 0 0 0 100^2 0 0 0 0;
+    0 0 0 0 0 1^2 0 0 0;
+    0 0 0 0 0 0 1^2 0 0;
+    0 0 0 0 0 0 0 1^2 0;
+    0 0 0 0 0 0 0 0 10^2];
+
+% State transition matrix
+PHI=[1 0 0 0 0 0 0 0 0;
+    0 1 0 0 0 0 0 0 0;
+    0 0 1 0 0 0 0 0 0;
+    0 0 0 1 1 0 0 0 0; % clock bias is the only dynamic state ( clock bias=clock bias + drift )
+    0 0 0 0 1 0 0 0 0;
+    0 0 0 0 0 1 0 0 0;
+    0 0 0 0 0 0 1 0 0;
+    0 0 0 0 0 0 0 1 0;
+    0 0 0 0 0 0 0 0 1];
+
+% process noise
+Qpos=0
+Qvel=0
+Q=[ Qpos^2 0 0 0 0 0 0 0 0 ;
+    0 Qpos^2 0 0 0 0 0 0 0;
+    0 0 Qpos^2 0 0 0 0 0 0;
+    0 0 0 50 0 0 0 0 0;
+    0 0 0 0  50 0 0 0 0;
+    0 0 0 0 0 Qvel^2 0 0 0;
+    0 0 0 0 0 0 Qvel^2 0 0;
+    0 0 0 0 0 0 0 Qvel^2 0;
+    0 0 0 0 0 0 0 0 100];
+
+% measurement noise
+
+for i=1:2400
+
+    % step #1 predict state
+    x=PHI*x;
+    
+     % step #2 predict error-covarince
+    P=PHI*P*PHI'+Q;
+    
+    
