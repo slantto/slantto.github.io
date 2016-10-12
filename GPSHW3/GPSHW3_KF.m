@@ -9,9 +9,12 @@ nomVxyz=[0,0,0];
 
 trop=input('Include Troposphere delay(1 for yes 0 for no)');
 if trop==1
-    Po=input('what is your total pressure?(mbar)');
-    To=input('what is your temperature?(kelvin)');
-    eo=input('what is your partial pressure do to water?(mbar)');
+    Po=1013;
+    To=288.15;
+    eo=12.8;
+%     Po=input('what is your total pressure?(mbar)');
+%     To=input('what is your temperature?(kelvin)');
+%     eo=input('what is your partial pressure do to water?(mbar)');
 else
     Po=0;
     To=0;
@@ -25,20 +28,20 @@ end
 x=[0 0 0 0 0 0 0 0]';
 
 % initiallize uncertainty, 1000m at xyz
-P=[1000^2 0 0 0 0 0 0 0 ;
-    0 1000^2 0 0 0 0 0 0 ;
-    0 0 1000^2 0 0 0 0 0 ;
+P=[100^2 0 0 0 0 0 0 0 ;
+    0 100^2 0 0 0 0 0 0 ;
+    0 0 100^2 0 0 0 0 0 ;
     0 0 0 100000^2 0 0 0 0 ;
     0 0 0 0 100^2 0 0 0;
-    0 0 0 0 0 10^2 0 0;
-    0 0 0 0 0 0 10^2 0;
-    0 0 0 0 0 0 0 10^2];
+    0 0 0 0 0 1^2 0 0;
+    0 0 0 0 0 0 1^2 0;
+    0 0 0 0 0 0 0 1^2];
 
 % State transition matrix
 %user is stationary
-PHI=[1 0 0 0 0 0 0 0;
-    0 1 0 0 0 0 0 0;
-    0 0 1 0 0 0 0 0;
+PHI=[1 0 0 0 0 1 0 0;
+    0 1 0 0 0 0 1 0;
+    0 0 1 0 0 0 0 1;
     0 0 0 1 1 0 0 0; % clock bias is the only dynamic state ( clock bias=clock bias + drift )
     0 0 0 0 1 0 0 0;
     0 0 0 0 0 1 0 0;
@@ -46,12 +49,12 @@ PHI=[1 0 0 0 0 0 0 0;
     0 0 0 0 0 0 0 1];
 
 % process noise
-Qpos=1000
+Qpos=0
 Qvel=0
 Q=[ Qpos^2 0 0 0 0 0 0 0;
     0 Qpos^2 0 0 0 0 0 0;
     0 0 Qpos^2 0 0 0 0 0;
-    0 0 0 10 0 0 0 0;
+    0 0 0 100 0 0 0 0;
     0 0 0 0 10 0 0 0;
     0 0 0 0 0 Qvel^2 0 0;
     0 0 0 0 0 0 Qvel^2 0;
@@ -61,7 +64,7 @@ Q=[ Qpos^2 0 0 0 0 0 0 0;
 
 %use Ionosphereic free data
 prDataIF=(2.546*prDataP1)-(1.546*prDataP2);
-prRateIF=(2.546*prRateL1(:,1599))-(1.546*prRateL2);
+%prRateIF=(2.546*prRateL1(:,1599))-(1.546*prRateL2);
 llh=xyz2llh(nomXYZ);
 for i=1:N
     
@@ -79,9 +82,9 @@ for i=1:N
     
     for j=1:nSat(i)
         prComputed(j)=norm(satsXYZ(j,:,i)-nomXYZ)+clockBiasNom*c;
-        prRateComp(j)=norm(satsVxVyVz(j,:,i)-nomVxyz);
+        %prRateComp(j)=norm(satsVxVyVz(j,:,i));
         H(j,1:4)=[(satsXYZ(j,:,i)-nomXYZ)/norm(satsXYZ(j,:,i)-nomXYZ), 1];
-        H(j,6:8)=[(satsVxVyVz(j,:,i)-nomVxyz)/norm(satsVxVyVz(j,:,i)-nomVxyz)];
+        %H(j,6:8)=[(satsVxVyVz(j,:,i))/norm(satsVxVyVz(j,:,i))];
     end
     
     % form meaurement error covariance ( could do elevation dependent weighting here)
@@ -105,7 +108,7 @@ for i=1:N
     % measurement vector
     z=prComputed-prDataIF(1:nSat(i),i); %delta-rho
     y=H*x;
-    x=x+K*(z-y)
+    x=x+K*(z-y);
     
     % step # 5 update measurment error covariance
     P=(eye(length(x))-K*H)*P;
@@ -114,7 +117,7 @@ for i=1:N
     % step 6 save estimate and move to next step
     xyzKF(i,1:3)=nomXYZ'+x(1:3);
     clockBiasKF(i)=clockBiasNom'+(x(4)/c);
-    %VxyzKF(i,1:3)=nomVxyz'+x(6:8);
+    VxyzKF(i,1:3)=x(6:8);
     enuTruth(i,:)=xyz2enu(truthXYZ(:,i),nomXYZ);
     enuKF(i,:)=xyz2enu(xyzKF(i,1:3),nomXYZ);
     KF_3DErr(i)=norm(enuKF(i,:)-enuTruth(i,:));
@@ -122,9 +125,11 @@ for i=1:N
     llh=xyz2llh(xyzKF(i,:));
     
 end
-figure
-plot(KF_3DErr)
-figure
-plot(KF_clkBiasErr/1000)
+% figure
+% plot(KF_3DErr)
+% figure
+% plot(KF_clkBiasErr/1000)
 figure
 plot(enuKF-enuTruth)
+figure
+plot(VxyzKF)
