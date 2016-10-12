@@ -49,12 +49,12 @@ for i=1:2400
     P=PHI*P*PHI'+Q;
     
     % form observation matrix
-    
+    n=length(x);
     m=nSat(i);
-    H=zeros(m,5);
+    H=zeros(m,n);
     prComputed=zeros(m,1);
     for j=1:nSat(i)
-        prComputed(j)=norm(satsXYZ(j,:,i)-nomXYZ)+clockBiasNom*C;
+        prComputed(j)=norm(satsXYZ(j,:,i)-nomXYZ)+clockBiasNom*c;
         H(j,1:4)=[(satsXYZ(j,:,i)-nomXYZ)/norm(satsXYZ(j,:,i)-nomXYZ), 1];
     end
     
