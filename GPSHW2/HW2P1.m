@@ -81,11 +81,9 @@ for i=1:N
     end
     
     %Use function LLSPos to get xyz estimate at each epoch;
-<<<<<<< HEAD
+
     [xyzEst(:,i),clockBiasEst(:,i),PDOP(:,i),TDOP(:,i),GDOP(:,i),prefit,postFit(:,i),TECU(:,i)]=LLSPos(Satxyz,pr,nomXYZ,clockBiasNom,Nsats,c,W,trop,ion,mel,llh,Po,To,eo,A1,A2,A3,A4,t,el(:,i),klo,tshell,ionfree);
-=======
-    [xyzEst(:,i),clockBiasEst(:,i),PDOP(:,i),TDOP(:,i),GDOP(:,i),prefit,postFit(:,i)]=LLSPos(Satxyz,pr,nomXYZ,clockBiasNom,Nsats,c,W,trop,ion,mel,llh,Po,To,eo,A1,A2,A3,A4,t,el(:,i),klo,tshell,ionfree);
->>>>>>> 49326cf997cebea9f2b27102cea3d6b0bc877ad6
+
     %substitute xyz estimate for epoch i to be xyz nom for epoch i+1
     nomXYZ=xyzEst(:,i)';
     clockBiasNom=clockBiasEst(:,i)';

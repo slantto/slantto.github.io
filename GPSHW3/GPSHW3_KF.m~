@@ -47,21 +47,18 @@ PHI=[1 0 0 0 0 0 0 0;
 
 % process noise
 Qpos=1000
-Qvel=0
 Q=[ Qpos^2 0 0 0 0 0 0 0;
     0 Qpos^2 0 0 0 0 0 0;
     0 0 Qpos^2 0 0 0 0 0;
     0 0 0 10 0 0 0 0;
     0 0 0 0 10 0 0 0;
-    0 0 0 0 0 Qvel^2 0 0;
-    0 0 0 0 0 0 Qvel^2 0;
-    0 0 0 0 0 0 0 Qvel^2];
+    0 0 0 0 0];
 
 % measurement noise
 
 %use Ionosphereic free data
 prDataIF=(2.546*prDataP1)-(1.546*prDataP2);
-prRateIF=(2.546*prRateL1(:,1599))-(1.546*prRateL2);
+prRateIF=(2.546*prRateL1)-(1.546*prRateL2);
 llh=xyz2llh(nomXYZ);
 for i=1:N
     
