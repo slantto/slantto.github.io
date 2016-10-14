@@ -7,14 +7,15 @@ N=length(nSat); %number of epochs
 c=299792458; %speed of light, m/s
 nomVxyz=[0,0,0];
 
+velocity=input('given prRate?(1 for yes, 0 for no)');
 trop=input('Include Troposphere delay(1 for yes 0 for no)');
 if trop==1
     Po=1013;
     To=288.15;
     eo=12.8;
-%     Po=input('what is your total pressure?(mbar)');
-%     To=input('what is your temperature?(kelvin)');
-%     eo=input('what is your partial pressure do to water?(mbar)');
+    %     Po=input('what is your total pressure?(mbar)');
+    %     To=input('what is your temperature?(kelvin)');
+    %     eo=input('what is your partial pressure do to water?(mbar)');
 else
     Po=0;
     To=0;
@@ -22,27 +23,27 @@ else
 end
 
 
-%state-vector  x=[delta-x, delta-y, delta-z, clock bias, clock drift]
+%state-vector  x=[delta-x, delta-y, delta-z, clock bias, Vx, Vy, Vz,clock drift]
 
 %assume delta is zero intially
 x=[0 0 0 0 0 0 0 0]';
 
 % initiallize uncertainty, 1000m at xyz
-P=[100^2 0 0 0 0 0 0 0 ;
-    0 100^2 0 0 0 0 0 0 ;
-    0 0 100^2 0 0 0 0 0 ;
+P=[1000^2 0 0 0 0 0 0 0 ;
+    0 1000^2 0 0 0 0 0 0 ;
+    0 0 1000^2 0 0 0 0 0 ;
     0 0 0 100000^2 0 0 0 0 ;
-    0 0 0 0 100^2 0 0 0;
+    0 0 0 0 1^2 0 0 0;
     0 0 0 0 0 1^2 0 0;
     0 0 0 0 0 0 1^2 0;
-    0 0 0 0 0 0 0 1^2];
+    0 0 0 0 0 0 0 100^2];
 
 % State transition matrix
 %user is stationary
-PHI=[1 0 0 0 0 1 0 0;
-    0 1 0 0 0 0 1 0;
-    0 0 1 0 0 0 0 1;
-    0 0 0 1 1 0 0 0; % clock bias is the only dynamic state ( clock bias=clock bias + drift )
+PHI=[1 0 0 0 1 0 0 0;
+    0 1 0 0 0 1 0 0;
+    0 0 1 0 0 0 1 0;
+    0 0 0 1 0 0 0 1;
     0 0 0 0 1 0 0 0;
     0 0 0 0 0 1 0 0;
     0 0 0 0 0 0 1 0;
@@ -55,16 +56,19 @@ Q=[ Qpos^2 0 0 0 0 0 0 0;
     0 Qpos^2 0 0 0 0 0 0;
     0 0 Qpos^2 0 0 0 0 0;
     0 0 0 100 0 0 0 0;
-    0 0 0 0 10 0 0 0;
+    0 0 0 0 Qvel^2 0 0 0;
     0 0 0 0 0 Qvel^2 0 0;
     0 0 0 0 0 0 Qvel^2 0;
-    0 0 0 0 0 0 0 Qvel^2];
+    0 0 0 0 0 0 0 0];
 
 % measurement noise
 
 %use Ionosphereic free data
 prDataIF=(2.546*prDataP1)-(1.546*prDataP2);
-%prRateIF=(2.546*prRateL1(:,1599))-(1.546*prRateL2);
+if velocity==1
+    prRateL2(:,1600)=prRateL1(:,1600);
+    prRateIF=(2.546*prRateL1)-(1.546*prRateL2);
+end
 llh=xyz2llh(nomXYZ);
 for i=1:N
     
@@ -76,17 +80,26 @@ for i=1:N
     
     % form observation matrix
     n=length(x);
-    m=nSat(i);
+    if velocity==1
+        m=2*nSat(i);
+    elseif velocity==0
+        m=nSat(i);
+    end
     H=zeros(m,n);
-    prComputed=zeros(m,1);
+    prComputed=zeros(m/2,1);
     
     for j=1:nSat(i)
         prComputed(j)=norm(satsXYZ(j,:,i)-nomXYZ)+clockBiasNom*c;
-        %prRateComp(j)=norm(satsVxVyVz(j,:,i));
+        if velocity==1
+            prSquigDot(j)=prRateIF(j)-(satsVxVyVz(j,:,i)*((satsXYZ(j,:,i)-nomXYZ)/norm(satsXYZ(j,:,i)-nomXYZ))');
+        end
         H(j,1:4)=[(satsXYZ(j,:,i)-nomXYZ)/norm(satsXYZ(j,:,i)-nomXYZ), 1];
-        %H(j,6:8)=[(satsVxVyVz(j,:,i))/norm(satsVxVyVz(j,:,i))];
     end
     
+    if velocity==1
+    H(((m/2)+1):m,5:8)=H(1:(m/2),1:4);
+    end
+        
     % form meaurement error covariance ( could do elevation dependent weighting here)
     R=(2.5^2)*eye(m);
     for j=1:nSat(i)
@@ -106,9 +119,14 @@ for i=1:N
     
     % step #4 update state
     % measurement vector
-    z=prComputed-prDataIF(1:nSat(i),i); %delta-rho
+    z(1:nSat(i))=prComputed-prDataIF(1:nSat(i),i); %delta-rho
+    if velocity==1
+        z((nSat(i)+1):(2*nSat(i)))=prSquigDot;
+    elseif velocity==0
+        z((nSat(i)+1):(2*nSat(i)))=0;
+    end
     y=H*x;
-    x=x+K*(z-y);
+    x=x+K*(z'-y);
     
     % step # 5 update measurment error covariance
     P=(eye(length(x))-K*H)*P;
@@ -117,7 +135,7 @@ for i=1:N
     % step 6 save estimate and move to next step
     xyzKF(i,1:3)=nomXYZ'+x(1:3);
     clockBiasKF(i)=clockBiasNom'+(x(4)/c);
-    VxyzKF(i,1:3)=x(6:8);
+    VxyzKF(i,1:3)=x(5:7);
     enuTruth(i,:)=xyz2enu(truthXYZ(:,i),nomXYZ);
     enuKF(i,:)=xyz2enu(xyzKF(i,1:3),nomXYZ);
     KF_3DErr(i)=norm(enuKF(i,:)-enuTruth(i,:));
