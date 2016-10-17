@@ -1,11 +1,11 @@
 clear all
 
-load('dataSet3.mat')
+load('dataSet5.mat')
 
 %Setting Constants
 N=length(nSat); %number of epochs
 c=299792458; %speed of light, m/s
-nomVxyz=[0,0,0];
+
 
 smooth=input('Carrier Phase Smoothing?(1 for yes, 0 for no)');
 velocity=input('given prRate?(1 for yes, 0 for no)');
@@ -27,16 +27,16 @@ if velocity==1
     %state-vector  x=[delta-x, delta-y, delta-z, clock bias, Vx, Vy, Vz,clock drift]
     
     %assume delta is zero intially
-    x=[nomXYZ(1) nomXYZ(2) nomXYZ(3) 0 0 0 0 0]';
+    x=[0 0 0 0 0 0 0 0]';
     
     % initiallize uncertainty, 100m at xyz
-    P=[1000^2 0 0 0 0 0 0 0 ;
-        0 1000^2 0 0 0 0 0 0 ;
-        0 0 1000^2 0 0 0 0 0 ;
-        0 0 0 100000^2 0 0 0 0 ;
-        0 0 0 0 10^2 0 0 0;
-        0 0 0 0 0 10^2 0 0;
-        0 0 0 0 0 0 10^2 0;
+    P=[100^2 0 0 0 0 0 0 0 ;
+        0 100^2 0 0 0 0 0 0 ;
+        0 0 100^2 0 0 0 0 0 ;
+        0 0 0 10000^2 0 0 0 0 ;
+        0 0 0 0 100^2 0 0 0;
+        0 0 0 0 0 100^2 0 0;
+        0 0 0 0 0 0 100^2 0;
         0 0 0 0 0 0 0 100^2];
     
     % State transition matrix
@@ -51,8 +51,8 @@ if velocity==1
         0 0 0 0 0 0 0 1];
     
     % process noise
-    Qpos=0
-    Qvel=0
+    Qpos=00
+    Qvel=00
     Q=[ Qpos^2 0 0 0 0 0 0 0;
         0 Qpos^2 0 0 0 0 0 0;
         0 0 Qpos^2 0 0 0 0 0;
@@ -64,7 +64,7 @@ if velocity==1
     
 elseif velocity==0
     
-    %state-vector  x=[delta-x, delta-y, delta-z, clock bias, Vx, Vy, Vz,clock drift]
+    %state-vector  x=[delta-x, delta-y, delta-z, clock bias, clock drift]
     
     %assume delta is zero intially
     x=[0 0 0 0 0]';
@@ -73,8 +73,8 @@ elseif velocity==0
     P=[100^2 0 0 0 0;
         0 100^2 0 0 0;
         0 0 100^2 0 0;
-        0 0 0 100000^2 0
-        0 0 0 0 100^2];
+        0 0 0 10000^2 0
+        0 0 0 0 10^2];
     
     % State transition matrix
     %user is stationary
@@ -85,7 +85,7 @@ elseif velocity==0
         0 0 0 0 1];
     
     % process noise
-    Qpos=0
+    Qpos=100
     Q=[ Qpos^2 0 0 0 0;
         0 Qpos^2 0 0 0;
         0 0 Qpos^2 0 0;
@@ -98,7 +98,7 @@ end
 prDataIF=(2.546*prDataP1)-(1.546*prDataP2);
 if smooth==1
     M=100;
-    prSmooth=carrierSmooth(phaseL1,phaseL2,M,prDataIF,nSat);
+    prSmooth=carrierSmooth(phaseL1,phaseL2,M,prDataIF);
     prDataIF=prSmooth;
 end
 if velocity==1
@@ -139,7 +139,7 @@ for i=1:N
     end
     
     % form meaurement error covariance ( could do elevation dependent weighting here)
-    R=(2.5^2)*eye(m);
+    R=(2^2)*eye(m);
     for j=1:nSat(i)
         Satenu(j,:)=xyz2enu(satsXYZ(j,:,i),nomXYZ);
         sinel(j,:)=(Satenu(j,3))/(norm(Satenu(j,:)));
@@ -175,14 +175,15 @@ for i=1:N
     
     % step 6 save estimate and move to next step
     xyzKF(i,1:3)=nomXYZ'+x(1:3);
-    clockBiasKF(i)=clockBiasNom'+(x(4)/c);
+    clockBiasKF(i)=clockBiasNom'+(x(4));
+    KFclkDrift(i)=x(5);
     if velocity==1
     VxyzKF(i,1:3)=x(5:7);
     end
     enuTruth(i,:)=xyz2enu(truthXYZ(:,i),nomXYZ);
     enuKF(i,:)=xyz2enu(xyzKF(i,1:3),nomXYZ);
     KF_3DErr(i)=norm(enuKF(i,:)-enuTruth(i,:));
-    KF_clkBiasErr(i)=clockBiasKF(i)-(truthClockBias(i)/c);
+    KF_clkBiasErr(i)=(clockBiasKF(i)-truthClockBias(i))/c;
     llh=xyz2llh(xyzKF(i,:));
     
 end
@@ -191,11 +192,35 @@ end
 % figure
 % plot(KF_clkBiasErr/1000)
 figure
+subplot(311)
 plot(enuKF-enuTruth)
-RMSEenu(1)=sqrt(mean((enuKF(1,:)-enuTruth(1,:)).^2));
-RMSEenu(2)=sqrt(mean((enuKF(2,:)-enuTruth(2,:)).^2));
-RMSEenu(3)=sqrt(mean((enuKF(3,:)-enuTruth(3,:)).^2));
+title('KF ENU Error')
+xlabel('Epoch')
+ylabel('error(m)')
+legend('e','n','u')
+subplot(312)
+plot(KF_clkBiasErr)
+title('KF Clock Bias Error')
+xlabel('Epoch')
+ylabel('error(m)')
+subplot(313)
+plot(KFclkDrift)
+title('KF Clock Drift')
+xlabel('Epoch')
+ylabel('seconds')
+RMSEenu(1)=sqrt(mean((enuKF(:,1)-enuTruth(:,1)).^2));
+RMSEenu(2)=sqrt(mean((enuKF(:,2)-enuTruth(:,2)).^2));
+RMSEenu(3)=sqrt(mean((enuKF(:,3)-enuTruth(:,3)).^2));
+figure
+plot(KF_3DErr)
+title('KF 3D Error')
+xlabel('Epoch')
+ylabel('error(m)')
 if velocity==1
 figure
 plot(VxyzKF)
+title('KF Velocity Estimation(in XYZ)')
+xlabel('Epoch')
+ylabel('Velocity(m/s)')
+legend('Vx','Vy','Vz')
 end
