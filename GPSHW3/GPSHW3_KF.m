@@ -1,6 +1,6 @@
 clear all
 
-load('dataSet5.mat')
+load('dataSet3.mat')
 
 %Setting Constants
 N=length(nSat); %number of epochs
@@ -27,12 +27,12 @@ if velocity==1
     %state-vector  x=[delta-x, delta-y, delta-z, clock bias, Vx, Vy, Vz,clock drift]
     
     %assume delta is zero intially
-    x=[0 0 0 0 0 0 0 0]';
+    x=[nomXYZ(1) nomXYZ(2) nomXYZ(3) 0 0 0 0 0]';
     
-    % initiallize uncertainty, 1000m at xyz
-    P=[100^2 0 0 0 0 0 0 0 ;
-        0 100^2 0 0 0 0 0 0 ;
-        0 0 100^2 0 0 0 0 0 ;
+    % initiallize uncertainty, 100m at xyz
+    P=[1000^2 0 0 0 0 0 0 0 ;
+        0 1000^2 0 0 0 0 0 0 ;
+        0 0 1000^2 0 0 0 0 0 ;
         0 0 0 100000^2 0 0 0 0 ;
         0 0 0 0 10^2 0 0 0;
         0 0 0 0 0 10^2 0 0;
@@ -69,7 +69,7 @@ elseif velocity==0
     %assume delta is zero intially
     x=[0 0 0 0 0]';
     
-    % initiallize uncertainty, 1000m at xyz
+    % initiallize uncertainty, 100m at xyz
     P=[100^2 0 0 0 0;
         0 100^2 0 0 0;
         0 0 100^2 0 0;
@@ -192,6 +192,9 @@ end
 % plot(KF_clkBiasErr/1000)
 figure
 plot(enuKF-enuTruth)
+RMSEenu(1)=sqrt(mean((enuKF(1,:)-enuTruth(1,:)).^2));
+RMSEenu(2)=sqrt(mean((enuKF(2,:)-enuTruth(2,:)).^2));
+RMSEenu(3)=sqrt(mean((enuKF(3,:)-enuTruth(3,:)).^2));
 if velocity==1
 figure
 plot(VxyzKF)
