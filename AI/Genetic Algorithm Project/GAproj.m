@@ -1,6 +1,9 @@
 %Genetic Algorithm Project
 clear
 clc
+close all
+
+tic
 %% Initialize first population
 Rearth=6371; %km radius of earth
 mu=3.986004415*10^5; %km^3/s^2 Gravitational parameter of earth
@@ -48,6 +51,7 @@ Pop=horzcat(R2,R3);
 
 for ijk=1:MaxGen
     %%
+    Tstart=tic;
     if ijk>1
         R2=Pop(:,1);
         R3=Pop(:,2);
@@ -67,7 +71,7 @@ for ijk=1:MaxGen
         end
         tof=tof/3600;%puts time of flight in hours
         
-        Pop=horzcat(R2,R3);
+        
     end
     %% Fitness Evaluation and Selection
     %Call for fitness and roulette
@@ -135,10 +139,45 @@ Match = sum(ismember(Loc_Cross_Ind,Loc_Mute_Ind)); % Making sure Individuals sel
 
 
 
-[ NewPop1 ] = Mutation(Current_Gen_Num, Mute_Ind,MaxGen); % Newly mutated individuals
+[ NewPop1 ] = Muta(Current_Gen_Num, Mute_Ind,MaxGen); % Newly mutated individuals
 [ NewPop2 ] = Crossover( Cross_Ind ); % New Individuals after crossover
 [ NewPop3 ] = Population(setdiff(Rows_Left,Loc_Mute_Ind),:); % Individuals that went unchanged
 
 NewPopFinal = [ NewPop1; NewPop2; NewPop3]; % Concatenated Population Matrix
 Pop=NewPopFinal;
+Gen(:,:,ijk)=horzcat(Pop(:,:),FITNESS',DVFIT',TOFFIT');
+
+
+
+TGen(ijk) = toc(Tstart);
+TGenSum = sum(TGen); 
+
+
 end
+
+
+for ii=1:length(Gen)
+Maxfit(ii)=max(Gen(:,3,ii));
+Meanfit(ii)=mean(Gen(:,3,ii));
+MaxDVf(ii)=max(Gen(:,4,ii));
+MaxTOFf(ii)=max(Gen(:,5,ii));
+MeanDVf(ii)=mean(Gen(:,4,ii));
+MeanTOFf(ii)=mean(Gen(:,5,ii));
+end
+
+figure; plot(1:length(Gen),Maxfit,1:length(Gen),Meanfit);
+ylim([0 1])
+
+figure; plot(1:length(Gen),MaxTOFf,1:length(Gen),MeanTOFf);
+ylim([0 1])
+
+figure; plot(1:length(Gen),MaxDVf,1:length(Gen),MeanDVf);
+ylim([0 1])
+
+
+
+
+Ave_Time = TGenSum/ijk;
+disp('Results:')
+fprintf('Average Time per Generation is = %.5f Seconds\n',Ave_Time)
+fprintf('Time to Run GA is = %.5f Seconds\n\n',toc)
