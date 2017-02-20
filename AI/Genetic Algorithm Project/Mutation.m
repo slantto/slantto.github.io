@@ -11,7 +11,7 @@ NewPop1 = zeros(SIZE); % Initialize New Matrix
 
 t = Current_Gen_Num;
 T = MaxGen;
-b = 0.05; % Don't know what this is. YOLO
+b = 0.07; % Don't know what this is. YOLO
 
 for j = 1:SIZE(1)
     for i = 1:SIZE(2)
