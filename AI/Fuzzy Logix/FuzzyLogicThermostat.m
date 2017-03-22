@@ -1,30 +1,24 @@
-%Fuzzy Logic Matrix Building
-OvenTempError = -20;
-OvenTempRate = 2;
-time = 1; %Can be changed to however long we want to run this simulation
+function [ y ] = FuzzyLogicThermostat( u )
 
+OvenTempError = u(1);
+OvenTempRate = u(2);
 
-IRM = zeros(5,5);
-im1 = 1:5;
-im2 = 1:5;
+fprintf('The Oven temperature error is = %.10f\n',OvenTempError)
+fprintf('The Oven temperature rate is = %.10f\n',OvenTempRate)
+%------------------------------
+% Fuzzification: Crisp Input => Fuzzy Input
+%
+[ FuzzyTempInput ] = TemperatureMF(OvenTempError);
+[ FuzzyTempRateInput ] = TemperatureRateMF(OvenTempRate);
 
+%
+%------------------------------
+% Inference Rule Matrix: 
+IRM = InferenceRuleMatrix( FuzzyTempInput, FuzzyTempRateInput );
 
-for i = 1:time
-    
-    % Access Membership Functions
-    [ FuzzyTempInput ] = TemperatureMF(OvenTempError);
-    [ FuzzyTempRateInput ] = TemperatureRateMF(OvenTempRate);
-    
-    % Create Inference Rule Matrix
-    for im1 = 1:5;
-        for im2 = 1:5;
-            
-            IRM(im1,im2) = min(FuzzyTempRateInput(im1),FuzzyTempInput(im2));
-            
-        end
-    end 
-end
-
+%
+%------------------------------
+% Defuzzification: Fuzzy Output => Crisp Output
 %------------------------------
 % Map Heater IRM to Fuzzy CMD
 Heater_Off = [IRM(1,1),IRM(2,1),IRM(3,1),IRM(3,2),IRM(3,3),IRM(4,1),...
@@ -58,11 +52,11 @@ Fan_Low(Fan_Low==0) = [];
 Fan_Medium(Fan_Medium==0) = [];
 Fan_High(Fan_High==0) = [];
 
-% Some sort of Area equation here.
-
+%------------------------------
+% Crisp Output: Center of Sum Defuzzification
+b = 1;
 
 Centr1 = [0 1 2 3 4];
-b = 1;
 a1 = [-0.5*Heater_Off+1];
 a2 = [-0.5*Heater_VeryLow+1];
 a3 = [-0.5*Heater_Low+1];
@@ -89,13 +83,12 @@ Area22 = 0.5.*(a22+b).*Fan_Low;
 Area33 = 0.5.*(a33+b).*Fan_Medium;
 Area44 = 0.5.*(a44+b).*Fan_High;
 
-CrispFanOutput = sum([Area11*Centr1(1),Area22*Centr1(2),Area33*Centr1(3),Area44*Centr1(4)])/...
-    sum([Area1,Area2,Area3,Area4]);
+CrispFanOutput = sum([Area11*Centr2(1),Area22*Centr2(2),Area33*Centr2(3),Area44*Centr2(4)])/...
+    sum([Area11,Area22,Area33,Area44]);
+y = [ CrispHeaterOutput, CrispFanOutput ];
 
+fprintf('The Heater Voltage error is = %.10f\n',CrispHeaterOutput)
+fprintf('The Fan Voltage rate is = %.10f\n',CrispFanOutput)
 
-x = [0 3];
-y = [5 50];
-c = [[1;1] x(:)]\y(:);
-Slope = c(2)
-Intercept = c(1)
+end
 
