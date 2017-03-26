@@ -24,7 +24,7 @@ for i = 1:length(X)
     
 end
 
-return
 
+plot([-10:.001:9.999],y)
 end
 

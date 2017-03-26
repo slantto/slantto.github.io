@@ -47,7 +47,7 @@ c = 1005.4;
 % -------------------------------
 % Density of air at sea level = 1.2250 kg/m^3
 densAir = 1.2250;
-M = (lenOven*widOven*htOven)*densAir;
+M = (5e6)*densAir;
 % -------------------------------
 
 sim('Oven_System')

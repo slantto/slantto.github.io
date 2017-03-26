@@ -7,9 +7,9 @@
 PQR=horzcat(SD.P',SD.Q',SD.R');
 covPQR=cov(PQR);
 
-figure;hist(SD.P); 
-figure;hist(SD.Q);
-figure;hist(SD.R);
+figure;hist(SD.P); figure; pwelch(SD.P);
+figure;hist(SD.Q); figure; pwelch(SD.Q);
+figure;hist(SD.R); figure; pwelch(SD.R);
 
 
 %Problem 2
