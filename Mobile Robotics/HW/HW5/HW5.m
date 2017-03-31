@@ -21,10 +21,10 @@ PosEst = PosTru;
 
 for t = 1 : T
     Time(t) = t*T_S;
-    forceTru(t) = 5*sin(Time(t));
+    forceTru(t) = 5*(sin(Time(t)));
     %AccelTru(t) = (forceTru(t)/Mass)-(k*PosTru(t)/Mass)-(c*VelTru(t)/Mass);
     if t > 1
-        AccelTru(t) = (-k*PosTru(t)/Mass)-(c*VelTru(t)/Mass)+(forceTru(t)/Mass);
+        AccelTru(t) = ((-k*PosTru(t))/Mass)-((c*VelTru(t))/Mass)+((forceTru(t)-forceTru(t-1))/Mass);
         VelTru(t) = VelTru(t-1) + AccelTru(t) * T_S;
         PosTru(t) = PosTru(t-1) + VelTru(t) * T_S;
     end
