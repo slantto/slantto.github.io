@@ -1,6 +1,8 @@
+#include <Arduino.h>
+
 #include <SoftwareSerial.h>
-#define rxPin 3  // pin 3 connects to smcSerial TX  (not used in this example)
-#define txPin 4  // pin 4 connects to smcSerial RX
+#define rxPin 6  // pin 3 connects to smcSerial TX  (not used in this example)
+#define txPin 5  // pin 4 connects to smcSerial RX
 SoftwareSerial smcSerial = SoftwareSerial(rxPin, txPin);
  
 // required to allow motors to move
@@ -47,8 +49,8 @@ void setup()
  
 void loop()
 {
-  setMotorSpeed(3200);  // full-speed forward
-  delay(1000);
-  setMotorSpeed(-3200);  // full-speed reverse
-  delay(1000);
+  setMotorSpeed(1000);  // full-speed forward
+//  delay(1000);
+//  setMotorSpeed(-200);  // full-speed reverse
+//  delay(1000);
 }

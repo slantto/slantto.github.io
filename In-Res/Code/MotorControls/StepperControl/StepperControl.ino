@@ -1,3 +1,5 @@
+#include <Arduino.h>
+
 // defines pins numbers
 const int xstepPin = 3; 
 const int xdirPin = 4;
@@ -35,7 +37,7 @@ void loop() {
   Serial.println("Enter number of mm(whole numbers only!)");
   while (Serial.available()==0){ }
   float mm = Serial.parseFloat();
-  float rev = 262.5 * mm ;
+  float rev = 62.5 * mm ;
   // 20000 steps per revolution 0.018 degree per step
   for(int x = 0; x < rev; x++) {
     digitalWrite(xstepPin,HIGH); 
@@ -58,7 +60,7 @@ else if (moto == 2){
   Serial.println("Enter number of mm(whole numbers only!)");
   while (Serial.available()==0){ }
   float mm = Serial.parseFloat();
-  float rev = 262.5 * mm ;
+  float rev = 62.625 * mm ;
   // 20000 steps per revolution 0.018 degree per step
   for(int x = 0; x < rev; x++) {
     digitalWrite(ystepPin,HIGH); 

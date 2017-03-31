@@ -1,3 +1,5 @@
+#include <Arduino.h>
+
 #include <Wire.h>
 
 #define SLAVE_ADDRESS 0x04
