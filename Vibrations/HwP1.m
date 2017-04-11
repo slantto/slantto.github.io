@@ -40,3 +40,8 @@ K2=[1,0,0;0,6,0;0,0,6];
 CharEq=[-4 0 61 0 -228 0 36];
 mu=roots(CharEq);
 
+%Solve for modal vector and e-values
+[phi2,d2]=eig(K2,M2);
+%Sort natural frequencies and modes
+[omega2,id2]=sort(sqrt(diag(d2)));
+
