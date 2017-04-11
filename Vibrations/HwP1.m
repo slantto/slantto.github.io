@@ -1,5 +1,6 @@
 clear all
 
+%% Problem 1
 %Mass Matrix
 M=[2,0,0;0,3,1;0,1,1];
 %Stiffness Matrix
@@ -30,3 +31,12 @@ c2=phinorm2'*M*x0;
 c3=phinorm3'*M*x0;
 
 s=xdot0./omega;
+
+%% Problem 2
+
+M2=[6,1,1;1,1,0;1,0,1];
+K2=[1,0,0;0,6,0;0,0,6];
+
+CharEq=[-4 0 61 0 -228 0 36];
+mu=roots(CharEq);
+
