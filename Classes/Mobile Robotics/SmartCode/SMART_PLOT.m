@@ -7,7 +7,7 @@ clear all
 close all
 clc
 
-load SMART_DATAlaserangletest.mat;
+load SMART_DATA_PID_lab5.mat;
 
 [temp Total_Steps]=size(SD.Time);
 k=0
