@@ -2,14 +2,18 @@
 
 #include <SoftwareSerial.h>
 #include <Wire.h>
-#define rxPin 9  // pin 9 connects to smcSerial RX  (not used in this example)
-#define txPin 10  // pin 10 connects to smcSerial TX
-#define xstepPin 3
-#define xdirPin 4
-#define ystepPin 5
-#define ydirPin 6
-#define zstepPin 7
-#define zdirPin 8
+#define rxPin 32  // pin 9 connects to smcSerial RX  (not used in this example)
+#define txPin 33  // pin 10 connects to smcSerial TX
+#define xstepPin 22
+#define xdirPin 23
+#define ystepPin 24
+#define ydirPin 25
+#define zstepPin 26
+#define zdirPin 27
+#define zMS1Pin 28
+#define zMS2Pin 29
+#define zMS3Pin 30
+
 SoftwareSerial smcSerial = SoftwareSerial(rxPin, txPin);
 
 float currentX=0;
