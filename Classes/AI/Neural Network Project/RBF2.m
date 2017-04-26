@@ -1,5 +1,7 @@
-% MAE 565 Artificial Intelligence Techniques in MAE - Demo
-% ANN for Function Approximation - ANN Training in one Step
+% MAE 565 Aritificial Neural Network Indiividual Assignment
+%Sean Lantto
+%701168294
+%April 26,2017
 
 % RBF ANN - Arbitrary number of neurons (centers)
 for TrialCenter=1:2
@@ -77,12 +79,12 @@ for TrialCenter=1:2
             
         end
         
-%         figure, plot(inp1,y,'k',inp1,YestO,'r')
-%         title('ANN Response to Training Data')
-%         legend('Training Data','ANN Estimation',2)
-%         xlabel('Independent Variable x')
-%         ylabel('Function y=f(x)')
-%         grid
+        figure, plot(inp1,y,'k',inp1,YestO,'r')
+        title('ANN Response to Training Data')
+        legend('Training Data','ANN Estimation',2)
+        xlabel('Independent Variable x')
+        ylabel('Function y=f(x)')
+        grid
         
         
         % Step #2  -  Test the ANN with different data but still produced by the
