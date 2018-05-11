@@ -1,0 +1,11 @@
+*.pyc
+*.o
+*.so
+pnpnav.egg-info/*
+pnpnav.egg-info/dependency_links.txt
+pnpnav.egg-info/PKG-INFO
+pnpnav.egg-info/requires.txt
+pnpnav.egg-info/SOURCES.txt
+pnpnav.egg-info/top_level.txt
+bin/.ipynb_checkpoints
+.idea

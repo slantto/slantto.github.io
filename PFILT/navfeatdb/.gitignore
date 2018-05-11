@@ -1,0 +1,5 @@
+.idea
+navfeatdb.egg-info
+.pyc
+__pycache__/*
+*.py[cod]

@@ -1,0 +1,8 @@
+detector:
+  name: SIFT
+  parameters:
+  - {contrastThreshold: 0.04}
+  - {edgeThreshold: 10.0}
+  - {nFeatures: 1000}
+  - {nOctaveLayers: 3}
+  - {sigma: 1.6}

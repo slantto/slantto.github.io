@@ -1,0 +1,6 @@
+#All of these are DCMs stored in Row-Major, such that DCM in python
+#would be numpy.array(DCM).reshape(3,3)
+'/novatel/imu':      [ 0,  0,  1, -1,  0,  0,  0, -1,  0]
+'/vehicle':  [-1,  0,  0,  0, -1,  0,  0,  0,  1]
+'/graf_nav': [ 0,  1,  0,  1,  0,  0,  0,  0, -1]
+'/camera/image_raw': [-0.02734419, -0.99639104,  0.08035667,  0.99728716, -0.02169608, 0.07033924, -0.06834197,  0.08206205,  0.99428125]

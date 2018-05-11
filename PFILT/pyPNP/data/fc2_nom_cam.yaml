@@ -1,0 +1,30 @@
+image_width: 2048
+image_height: 2048
+camera_name: uvan_prosilica
+camera_matrix:
+  rows: 3
+  cols: 3
+  data: [6756.75, 0, 1024.0, 0, 6756.75, 1024.0, 0, 0, 1]
+distortion_model: plumb_bob
+distortion_coefficients:
+  rows: 1
+  cols: 5
+  data: [ -0.255533736260363, 1.05987334733691, -0.0110080352725975, 0.00772193221628908, 0]
+rectification_matrix:
+  rows: 3
+  cols: 3
+  data: [1, 0, 0, 0, 1, 0, 0, 0, 1]
+projection_matrix:
+  rows: 3
+  cols: 4
+  data: [6756.75, 0, 1024.0, 0, 0, 6756.75, 1024.0, 0, 0, 0, 1, 0]
+cam_to_body_dcm:
+  rows: 3
+  cols: 3
+  data: [0.0, -1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+cam_translation:
+  rows: 3
+  cols: 1
+  data: [0.0, 0.0, 0.0]
+
+

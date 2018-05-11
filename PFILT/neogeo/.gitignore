@@ -1,0 +1,8 @@
+*.gif
+*.pyc
+python/neogeo.egg-info
+scratch
+*.ipynb_checkpoints/*
+bin/.ipynb_checkpoints/db_ops-checkpoint.ipynb
+bin/.ipynb_checkpoints/phd_notes_09JUN15-checkpoint.ipynb
+.idea
