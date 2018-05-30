@@ -50,7 +50,7 @@ void DrillXZPos(float X,float Z)
       delayMicroseconds(500); 
       digitalWrite(Z_STEP_PIN,LOW); 
       delayMicroseconds(500); 
-      if (digitalRead(Z_MAX_PIN)==LOW){
+      if (digitalRead(Z_MIN_PIN)==LOW){
         Serial.println("ZMIN is Pressed! ");
         currentZ = 0;
         Z = 0;
@@ -68,7 +68,7 @@ void DrillXZPos(float X,float Z)
       delayMicroseconds(500); 
       digitalWrite(Z_STEP_PIN,LOW); 
       delayMicroseconds(500); 
-      if (digitalRead(Z_MIN_PIN)==LOW){
+      if (digitalRead(Z_MAX_PIN)==LOW){
         Serial.println("ZMAX is Pressed! ");
         break;}
   }

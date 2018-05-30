@@ -3,9 +3,11 @@
 
 //include libraries
 #include <HX711.h>
-#include <EmonLib.h>
+#include <math.h>
+#include <Servo.h>
+
 //Drill motor pin
-#define DRILL_SPEED_PIN A11 // pin A11(D65)
+#define DRILL_SPEED_PIN    A11 // pin A11(D65)
 #define DRILL_DIR_PIN 59
 
 //Stepper pins
@@ -54,36 +56,67 @@
 #define DOUT  40
 #define CLK   63
 #define calibration_factor 500 //*0.453592
-
 HX711 scale(DOUT, CLK);
 
 #define DOUT2  57
 #define CLK2   58
-#define calibration_factor2 1505 //*0.453592
+#define calibration_factor2 500 //*0.453592
 HX711 scale2(DOUT2,CLK2);
 
-EnergyMonitor emon1;
+#define THERM_R_NOM 100000
+#define TEMP_NOM 25
+#define BETAVAL 3950
+#define PULLR 4700
+
+float SETTEMP = 50;
+float TEMP_MAX = 100;
+
+//Create a servo object
+Servo capservo;
+
+// Parameters for measuring RMS current
+const double vRMS = 120.0;     // RMS voltage
+const double offset = 2.5;     // Half the ADC max voltage
+const int numTurns = 2000;      // 1:2000 transformer turns
+const int rBurden = 100;        // Burden resistor value in Ohms
+const int numSamples = 1000;    // Number of samples before calculating RMS
+
 
 float currentX=0;
 float currentY=0;
 float currentZ=0;
+
 float revX;
 float revY;
 float revZ;
+
 int X;
 int Y;
 int Z;
 int s;
+int meltime;
+
 float WOB1;
 float WOB2;
 float WOBavg;
+float WOBthresh = -15;
+float WOBmax = -20;
+float deladj;
+
+int sample;
+double voltage;
+double iPrimary;
+double acc = 0;
+double iRMS;
+double apparentPower;
+
+int capdrop = 0;
 
 void setup() {
 
   // Sets the two pins as Outputs
   pinMode(DRILL_SPEED_PIN, OUTPUT);
   pinMode(DRILL_DIR_PIN, OUTPUT);
-  analogWrite(DRILL_SPEED_PIN, 0);
   pinMode(FAN_PIN , OUTPUT);
   pinMode(HEATER_0_PIN , OUTPUT);
   pinMode(HEATER_1_PIN , OUTPUT);
@@ -124,22 +157,31 @@ void setup() {
  digitalWrite(Z_ENABLE_PIN    , LOW);
  digitalWrite(E_ENABLE_PIN    , LOW);
  digitalWrite(Q_ENABLE_PIN    , LOW);
- digitalWrite(HEATER_0_PIN, LOW);
  
-// digitalWrite(DRILL_DIR_PIN, HIGH);
-// analogWrite(DRILL_SPEED_PIN, 255);
-// delay(3000);
- 
-// digitalWrite(DRILL_DIR_PIN, LOW);
-// analogWrite(DRILL_SPEED_PIN, 255);
-// delay(3000);
-////  
-// digitalWrite(DRILL_SPEED_PIN, LOW);
-   
- emon1.current(15, 60);
+ digitalWrite(HEATER_1_PIN, LOW);
+ digitalWrite(DRILL_DIR_PIN, LOW);
+ analogWrite(DRILL_SPEED_PIN, 255);
+ delay(3000);
+analogWrite(DRILL_SPEED_PIN, 0);
+delay(500);
+ digitalWrite(DRILL_DIR_PIN, HIGH);
+ analogWrite(DRILL_SPEED_PIN, 120);
+ delay(3000);
+//  analogWrite(DRILL_SPEED_PIN, 0);
+ digitalWrite(DRILL_SPEED_PIN, LOW);
  
  Serial.begin(9600);
   // Serial2.begin(9600);
+
+//attach servo object to pin D11 
+capservo.attach(11);
+
+capdrop = 90;
+capservo.write(capdrop);
+delay(500);
+capdrop = 0;
+capservo.write(capdrop);
+delay(500);
 
 //Zero load cell 1
 scale.set_scale(calibration_factor);
@@ -149,8 +191,8 @@ scale2.set_scale(calibration_factor2);
 scale2.tare();
 
   HomePos();
-  ROBOSTATE();
-Serial.println("START");
+  Serial.println("Ready");
+
 }
 void loop() {
   if (Serial.available() > 0) {
@@ -170,7 +212,12 @@ void loop() {
 
         currentX = X;
         currentZ = Z;
-        Serial.println("DONE!");
+        Serial.println("X = ");
+        Serial.print(currentX);
+        Serial.println("Z = ");
+        Serial.print(currentZ);
+        Serial.println("Command Executed!");
+        delay(1000);
         break;
       //Z position and drill speed
       case '2': //position drill in vertical
@@ -186,7 +233,9 @@ void loop() {
       
         currentY = Y;
       
-        Serial.println("DONE!");
+        Serial.println("Y = ");
+        Serial.print(currentY);
+        Serial.println("Command Executed!");
         delay(1000); // One second delay
         break;
       case '3': //Drill operation
@@ -198,7 +247,13 @@ void loop() {
         while (Serial.available() == 0) { }
         Z = Serial.parseFloat();
         
-        DRILL_OP(X, Z);
+        Serial.println("Enter minutes for melt chamber to melt ice(WHOLE NUMBERS ONLY, I WILL FIND YOU)");
+        while (Serial.available() == 0) { }
+        meltime = Serial.parseFloat();
+        
+        DRILL_OP(X, Z, meltime);
+        
+        Serial.println("Drill Op completed");
         break;
       case '4': //turn heater on and off
       if(digitalRead(HEATER_0_PIN)==LOW){
@@ -208,9 +263,11 @@ void loop() {
       else if(digitalRead(HEATER_0_PIN)==HIGH){
         digitalWrite(HEATER_0_PIN, LOW);
         Serial.println("Heater OFF!");}
+        
+        
         break;
       case '5': //Robot State
-      ROBOSTATE();
+        ROBOSTATE();
         break;
       case '6':
       

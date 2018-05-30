@@ -1,9 +1,9 @@
 void DrillYPos(float Y,int s)
 {
    if ( Y <  currentY) {
-        digitalWrite(Y_DIR_PIN,LOW);
+        digitalWrite(Y_DIR_PIN,HIGH);
         float mmY = currentY-Y;
-        float stepY = 78.74 * 16 * mmY; //78.74 steps per mm atfull step
+        float stepY = 78.74 * 4 * mmY; //78.74 steps per mm atfull step
         int j = 0;
         while ( j < stepY ) {  
             digitalWrite(Y_STEP_PIN,HIGH);
@@ -20,35 +20,34 @@ void DrillYPos(float Y,int s)
   }
   
     else if (Y > currentY){
-        digitalWrite(Y_DIR_PIN,HIGH);
+        digitalWrite(Y_DIR_PIN,LOW);
         float mmY = Y - currentY;
-        float stepY = 78.74 * 8 * mmY;//78.74 steps per mm for fullstep
+        float stepY = 78.74 * 4 * mmY;//78.74 steps per mm for fullstep
         int j = 0;
         digitalWrite(DRILL_DIR_PIN, HIGH);
         analogWrite(DRILL_SPEED_PIN, s);
         while (j<stepY){
-          //if ( (WOBavg > -20)&&(digitalRead(Y_MAX_PIN) == HIGH)){
-          if ((digitalRead(Y_MAX_PIN) == HIGH)){
+          if ( (WOBavg > -20)&&(digitalRead(Y_MAX_PIN) == HIGH)){
             digitalWrite(Y_STEP_PIN,HIGH);
-            delayMicroseconds(1000);
+            delayMicroseconds(500);
             digitalWrite(Y_STEP_PIN,LOW);
-            delayMicroseconds(1000);
+            delayMicroseconds(500);
             j++;
             if (digitalRead(Y_MAX_PIN)==LOW){
               Serial.println("YMAX is Pressed!");
               j = stepY;
               break;}
           }
-          //else {}
+          else {}
             
           
-//           WOB1=scale.get_units();
-//           WOB2=scale2.get_units();
-//           WOBavg=(WOB1+WOB2)/2;
-//           if(WOBavg < -3){
-//           Serial.write((byte)abs(WOB1));
-//           Serial.write((byte)abs(WOB2));
-//           Serial.write((byte)abs(WOBavg));}
+           WOB1=scale.get_units();
+           WOB2=scale2.get_units();
+           WOBavg=(WOB1+WOB2)/2;
+           if(WOBavg < -3){
+           Serial.write((byte)abs(WOB1));
+           Serial.write((byte)abs(WOB2));
+           Serial.write((byte)abs(WOBavg));}
     }
 
     }

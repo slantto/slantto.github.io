@@ -1,26 +1,44 @@
 void ROBOSTATE(){
 
-//FIND Irms
-double Irms = emon1.calcIrms(1480);  // Calculate Irms only
-Serial.print(Irms*120.0);           // Apparent power
-  Serial.print(" ");
-  Serial.println(Irms);             // Irms
-  
+// Read ADC, convert to voltage, remove offset
+sample = analogRead(A0);
+voltage = (sample * 3.3) / 4096;
+voltage = voltage - offset;
+// Calculate the sensed current
+iPrimary = (voltage / rBurden) * numTurns;
+
+Serial.println(iPrimary);
+
 Serial.println(currentX);
 Serial.print(" ");
 Serial.print(currentY);
 Serial.print(" ");
 Serial.print(currentZ);
 
+ float samples;
+  int i;
+  float average;
+  
+  for (i=0; i<5; i++){
+    samples += analogRead(TEMP_0_PIN);
+    delay(10);
+  }
+  
+  average = samples/5;
+  
+  average = 1023/average -1;
+  average = PULLR/average;
+  
+  float TEMP_C;
+  TEMP_C = average/THERM_R_NOM;
+  TEMP_C = log(TEMP_C);
+  TEMP_C /= BETAVAL;
+  TEMP_C += 1.0/(TEMP_NOM + 273.15);
+  TEMP_C = 1/TEMP_C;
+  TEMP_C -= 273.15;
+  
+  Serial.println(TEMP_C);
+  Serial.print(" Celsius");
 
-WOB1=scale.get_units();
-WOB2=scale2.get_units();
-WOBavg=(WOB1+WOB2)/2;
 
-Serial.println(WOB1);
-Serial.print(" ");
-Serial.print(WOB2);
-Serial.print(" ");
-Serial.print(WOBavg);
-     
 }
