@@ -2,13 +2,13 @@ void HomePos(){
   
         //bring y home
       if(digitalRead(Y_MIN_PIN) == HIGH){
-        digitalWrite(Y_DIR_PIN, HIGH);
+        digitalWrite(Y_DIR_PIN, LOW);
       }
       while(digitalRead(Y_MIN_PIN) == HIGH){
         digitalWrite(Y_STEP_PIN, HIGH); 
-        delayMicroseconds(500); 
+        delayMicroseconds(1000); 
         digitalWrite(Y_STEP_PIN, LOW); 
-        delayMicroseconds(500); 
+        delayMicroseconds(1000); 
       }
 //bring X home
       if(digitalRead(X_MIN_PIN)== LOW){

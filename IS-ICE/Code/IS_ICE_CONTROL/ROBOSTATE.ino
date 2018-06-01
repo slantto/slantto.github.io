@@ -39,6 +39,6 @@ Serial.print(currentZ);
   
   Serial.println(TEMP_C);
   Serial.print(" Celsius");
-
+  Serial.println("done");
 
 }

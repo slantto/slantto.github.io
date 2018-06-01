@@ -7,7 +7,7 @@
 #include <Servo.h>
 
 //Drill motor pin
-#define DRILL_SPEED_PIN    A11 // pin A11(D65)
+#define DRILL_SPEED_PIN A11 // pin A11(D65)
 #define DRILL_DIR_PIN 59
 
 //Stepper pins
@@ -191,19 +191,27 @@ scale2.set_scale(calibration_factor2);
 scale2.tare();
 
   HomePos();
-  Serial.println("Ready");
-
+  //ROBOSTATE();
+  Serial.println("ready");
 }
 void loop() {
+ // Read ADC, convert to voltage, remove offset
+sample = analogRead(A0);
+voltage = (sample * 3.3) / 4096;
+voltage = voltage - offset;
+// Calculate the sensed current
+iPrimary = (voltage / rBurden) * numTurns;
+
+//Serial.println(iPrimary);
   if (Serial.available() > 0) {
     int sercommand = Serial.read();
     switch (sercommand) {
       case '1': //Position drill in X and Z
-        Serial.println("Enter number of mm for X(whole numbers only!)");
+        Serial.println("Xmm");
          while (Serial.available() == 0) { }
         X = Serial.parseFloat();
 
-        Serial.println("Enter number of mm for Z(whole numbers only!)");
+        Serial.println("Zmm");
         while (Serial.available() == 0) { }
         Z = Serial.parseFloat();
 
@@ -216,16 +224,16 @@ void loop() {
         Serial.print(currentX);
         Serial.println("Z = ");
         Serial.print(currentZ);
-        Serial.println("Command Executed!");
+        Serial.println("done");
         delay(1000);
         break;
       //Z position and drill speed
       case '2': //position drill in vertical
-          Serial.println("Input drill depth in mm(0 means return to top)");
+          Serial.println("Ymm");
         while (Serial.available()==0){ }
         Y = Serial.parseInt();
       
-        Serial.println("Input drill speed in from 1 to 3200");
+        Serial.println("Speed");
         while (Serial.available()==0){ }
         s = Serial.parseInt();
       
@@ -235,25 +243,25 @@ void loop() {
       
         Serial.println("Y = ");
         Serial.print(currentY);
-        Serial.println("Command Executed!");
+        Serial.println("done");
         delay(1000); // One second delay
         break;
       case '3': //Drill operation
-        Serial.println("Enter number of mm for X(whole numbers only!)");
+        Serial.println("Xmm");
          while (Serial.available() == 0) { }
         X = Serial.parseFloat();
 
-        Serial.println("Enter number of mm for Z(whole numbers only!)");
+        Serial.println("Zmm");
         while (Serial.available() == 0) { }
         Z = Serial.parseFloat();
         
-        Serial.println("Enter minutes for melt chamber to melt ice(WHOLE NUMBERS ONLY, I WILL FIND YOU)");
+        Serial.println("Melt");
         while (Serial.available() == 0) { }
         meltime = Serial.parseFloat();
         
         DRILL_OP(X, Z, meltime);
         
-        Serial.println("Drill Op completed");
+        Serial.println("done");
         break;
       case '4': //turn heater on and off
       if(digitalRead(HEATER_0_PIN)==LOW){
