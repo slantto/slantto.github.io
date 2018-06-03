@@ -1,6 +1,6 @@
 void DRILL_OP(float X,float Z, float meltime)
 {
-  float readvalue;
+  
   DrillXZPos(X, Z);
   
   
@@ -30,21 +30,14 @@ void DRILL_OP(float X,float Z, float meltime)
     else if(WOBavg <= WOBmax){
       delay(2000);
     }
-     readvalue = (((analogRead(CSESNSE_PIN)*5.0)/1024.0)*1000)/mVperAmp;
-     Serial.print("<Amps=");
-     Serial.print(readvalue);
-     Serial.println(">");
+    
      WOB1=scale.get_units();
      WOB2=scale2.get_units();
      WOBavg=(WOB1+WOB2)/2;
-    // if(WOBavg < -5){
-    Serial.print("<W1=");
-    Serial.print(abs(WOB1));
-    Serial.print(", W2=");
-    Serial.print(abs(WOB2));
-    Serial.print(", WA=");
-    Serial.print(abs(WOBavg));
-    Serial.println(">");
+     if(WOBavg < -5){
+     Serial.write((byte)abs(WOB1));
+     Serial.write((byte)abs(WOB2));
+     Serial.write((byte)abs(WOBavg));}
     }
     
     
@@ -66,6 +59,6 @@ void DRILL_OP(float X,float Z, float meltime)
   Y = 0;
   Z = 0;
   
-  //Serial.println("Drill Op Complete ");
+  Serial.println("Drill Op Complete ");
   
 }

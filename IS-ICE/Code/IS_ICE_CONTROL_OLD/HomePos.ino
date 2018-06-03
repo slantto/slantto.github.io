@@ -2,7 +2,7 @@ void HomePos(){
   
         //bring y home
       if(digitalRead(Y_MIN_PIN) == HIGH){
-        digitalWrite(Y_DIR_PIN, HIGH);
+        digitalWrite(Y_DIR_PIN, LOW);
       }
       while(digitalRead(Y_MIN_PIN) == HIGH){
         digitalWrite(Y_STEP_PIN, HIGH); 

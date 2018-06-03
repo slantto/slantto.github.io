@@ -30,9 +30,7 @@ while (currentMillis-previousMillis < interval){
   TEMP_C = 1/TEMP_C;
   TEMP_C -= 273.15;
   
-  Serial.print("<T=");
-  Serial.print(TEMP_C);
-  Serial.println(">");
+  Serial.println(TEMP_C);
   
   if (TEMP_C > SETTEMP+2){
     digitalWrite(HEATER_1_PIN,LOW);
@@ -44,7 +42,7 @@ while (currentMillis-previousMillis < interval){
   
   if (TEMP_C>= TEMP_MAX){
     digitalWrite(HEATER_1_PIN,LOW);
-    //Serial.println("CAUTION! MELT CHAMBER EXCEEDING MAXIMUM TEMPERATURE!");
+    Serial.println("CAUTION! MELT CHAMBER EXCEEDING MAXIMUM TEMPERATURE!");
   }
   
   } 

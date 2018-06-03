@@ -1,17 +1,19 @@
 void ROBOSTATE(){
 
+// Read ADC, convert to voltage, remove offset
+sample = analogRead(A0);
+voltage = (sample * 3.3) / 4096;
+voltage = voltage - offset;
+// Calculate the sensed current
+iPrimary = (voltage / rBurden) * numTurns;
 
-Serial.print("<");
+Serial.println(iPrimary);
 
-Serial.print(currentX);
+Serial.println(currentX);
 Serial.print(" ");
 Serial.print(currentY);
 Serial.print(" ");
 Serial.print(currentZ);
-Voltage = getVPP();
-VRMS = (Voltage/2.0) * 0.707;
-IRMS = (VRMS *1000)/mVperAmp;
-
 
  float samples;
   int i;
@@ -35,16 +37,8 @@ IRMS = (VRMS *1000)/mVperAmp;
   TEMP_C = 1/TEMP_C;
   TEMP_C -= 273.15;
   
-  Serial.print("<");
-  Serial.print(IRMS);
-Serial.print(" ");
-Serial.print(currentX);
-Serial.print(" ");
-Serial.print(currentY);
-Serial.print(" ");
-Serial.print(currentZ);
-  Serial.print(TEMP_C);
-  Serial.println(" Celsius>");
-  //Serial.println("done");
+  Serial.println(TEMP_C);
+  Serial.print(" Celsius");
+  Serial.println("done");
 
 }

@@ -10,7 +10,7 @@ def sendToArduino(sendStr):
 
 def recvFromArduino():
     global startMarker, endMarker
-
+    # print("recieving reply")
     ck = ""
     x = "z" # any value that is not an end- or startMarker
     byteCount = -1 # to allow for the fact that the last increment will be one too many
@@ -19,13 +19,16 @@ def recvFromArduino():
     while  ord(x) != startMarker:
         x = ser.read()
 
+    print("recieving reply")
+
   # save data until the end marker is found
     while ord(x) != endMarker:
       if ord(x) != startMarker:
-        ck = ck + x
+        ck = ck + str(x)
         byteCount += 1
       x = ser.read()
-
+      x = x.decode()
+    # ck = ck.decode()
     return(ck)
 
 def waitForArduino():
@@ -43,7 +46,8 @@ def waitForArduino():
 
         msg = recvFromArduino()
 
-        print(msg)
+
+    print(msg)
 
 def logFromAduino():
     # Logs and displays sensor data from arduino during drill operations
@@ -80,13 +84,16 @@ if __name__ == '__main__':
 
     while 1:
         # Check if any alerts
-        if ser.inWaiting() > 0:
-            dataRecvd = recvFromArduino()
-            print(("Alert Received  " + dataRecvd))
+        #if ser.inWaiting() > 0:
+        #    dataRecvd = recvFromArduino()
+        #    print(("Alert Received  " + dataRecvd))
+        #Have to include a msg buffer becuase I dont really know what I am doing
+        msgfromPi = "COM"
         # Reset Comparam because python is a bitch
-        CP1 = 0
+        CP1 = "0"
         CP2 = CP1
         CP3 = CP2
+
         # Get Command from user
         command = input("Please input command number(h for help):")
         print(command)
@@ -100,48 +107,58 @@ if __name__ == '__main__':
         elif command == "1":   # Move in Horizontal Axis(X and Z)
             Xmm = input("Insert number of mm to move in X")
             Zmm = input("Insert Number of mm to move in Z")
-            ardcom = "<" + command + "," + Xmm + "," + Zmm + "," + CP3 + ">"
+            ardcom = "<" + msgfromPi + "," + command + "," + Xmm + "," + Zmm + "," + CP3 + ">"
             print(ardcom)
             hist = str(datetime.datetime.now()) + " " + ardcom
             COMHist.write(hist)
-            ser.write(ardcom)
+            ser.write(ardcom.encode())
 
-            waitingForReply = True
-            while ser.inWaiting() == 0:
-                pass
-            dataRecvd = recvFromArduino()
-            hist = str(datetime.datetime.now()) + " " + dataRecvd
-            COMHist.write(hist)
-            print(("Reply Received  " + dataRecvd))
-            waitingForReply = False
+            msg = ""
+            while msg.find("done") == -1:
+                msg = recvFromArduino()
+                print(msg)
+            print(msg)
+            #waitingForReply = True
+            #while ser.in_waiting == 0:
+            #    pass
+            #dataRecvd = recvFromArduino()
+            #hist = str(datetime.datetime.now()) + " " + dataRecvd
+            #COMHist.write(hist)
+            #print(("Reply Received  " + dataRecvd))
+            #waitingForReply = False
 
         elif command == "2":  # Move in Vertical Axis (Y)
             Ymm = input("Insert number of mm to move in Y")
             S = input("Drill speed between 0 and 255(max)")
-            ardcom = "<" + command + "," + Ymm + "," + S + "," + CP3 + ">"
-            print(ardcom)
+            ardcom = "<" + msgfromPi + "," + command + "," + Ymm + "," + S + "," + CP3 + ">"
+            # print(ardcom)
             hist = str(datetime.datetime.now()) + " " + ardcom
             COMHist.write(hist)
-            ser.write(ardcom)
+            ser.write(ardcom.encode())
 
-            waitingForReply = True
-            while ser.inWaiting() == 0:
-                pass
-            dataRecvd = recvFromArduino()
-            hist = str(datetime.datetime.now()) + " " + dataRecvd
-            COMHist.write(hist)
-            print(("Reply Received  " + dataRecvd))
-            waitingForReply = False
+            msg = ""
+            while msg.find("done") == -1:
+                msg = recvFromArduino()
+                print(msg)
+            print(msg)
+            #waitingForReply = True
+            #while ser.in_waiting == 0:
+            #    pass
+            #dataRecvd = recvFromArduino()
+            #hist = str(datetime.datetime.now()) + " " + dataRecvd
+            #COMHist.write(hist)
+            #print(("Reply Received  " + dataRecvd))
+            #waitingForReply = False
 
         elif command == "3":  # Drill operation
             Xmm = input("Insert number of mm to move in X")
             Zmm = input("Insert Number of mm to move in Z")
             Mt = input("Insert Number of minutes to leave heater on(recommend no more than 5)")
-            ardcom = "<" + command + "," + Xmm + "," + Zmm + "," + Mt + ">"
-            print(ardcom)
+            ardcom = "<" + msgfromPi + "," + command + "," + Xmm + "," + Zmm + "," + Mt + ">"
+            # print(ardcom)
             hist = str(datetime.datetime.now()) + " " + ardcom
             COMHist.write(hist)
-            ser.write(ardcom)
+            ser.write(ardcom.encode())
 
             msg = ""
             while msg.find("Drill Operation Complete") == -1:
@@ -149,18 +166,18 @@ if __name__ == '__main__':
                 print(msg)
                 wpl = str(datetime.datetime.now()) + " " + msg
                 WPLog.write(wpl)
-
+            print(msg)
 
 
         elif command == "4":  # Heater Manual Switch
-            ardcom = "<" + command + "," + CP1 + "," + CP2 + "," + CP3 + ">"
-            print(ardcom)
+            ardcom = "<" + msgfromPi + "," + command + "," + CP1 + "," + CP2 + "," + CP3 + ">"
+            #print(ardcom)
             hist = str(datetime.datetime.now()) + " " + ardcom
             COMHist.write(hist)
-            ser.write(ardcom)
+            ser.write(ardcom.encode())
 
             waitingForReply = True
-            while ser.inWaiting() == 0:
+            while ser.in_waiting == 0:
                 pass
             dataRecvd = recvFromArduino()
             hist = str(datetime.datetime.now()) + " " + dataRecvd
@@ -169,14 +186,14 @@ if __name__ == '__main__':
             waitingForReply = False
 
         elif command == "5":  # Check RobotState(Kinda useless)
-            ardcom = "<" + command + "," + CP1 + "," + CP2 + "," + CP3 + ">"
-            print(ardcom)
+            ardcom = "<" + msgfromPi + "," + command + "," + CP1 + "," + CP2 + "," + CP3 + ">"
+            #print(ardcom)
             hist = str(datetime.datetime.now()) + " " + ardcom
             COMHist.write(hist)
-            ser.write(ardcom)
+            ser.write(ardcom.encode())
 
             waitingForReply = True
-            while ser.inWaiting() == 0:
+            while ser.in_waiting == 0:
                 pass
             dataRecvd = recvFromArduino()
             hist = str(datetime.datetime.now()) + " " + dataRecvd
@@ -193,17 +210,19 @@ if __name__ == '__main__':
 
         elif command == "6":
             print("Have you ever heard the tragedy of Darth Plagueis The Wise...")
-            ardcom = "<" + command + "," + CP1 + "," + CP2 + "," + CP3 + ">"
+            ardcom = "<" + msgfromPi + "," + command + "," + CP1 + "," + CP2 + "," + CP3 + ">"
             hist = str(datetime.datetime.now()) + " " + ardcom
             COMHist.write(hist)
-            ser.write(ardcom)
+            ser.write(ardcom.encode())
 
             waitingForReply = True
-            while ser.inWaiting() == 0:
+            while ser.in_waiting == 0:
+                print("wait for reply")
                 pass
             dataRecvd = recvFromArduino()
             hist = str(datetime.datetime.now()) + " " + dataRecvd
             COMHist.write(hist)
+            #print(COMHist.read())
             print(("Reply Received  " + dataRecvd))
             waitingForReply = False
         else:
