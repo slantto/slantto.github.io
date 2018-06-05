@@ -10,7 +10,7 @@ switch(switchCom) {
    case 1: //Position drill in X and Z
       X = COMPARAM1;
       Z = COMPARAM2;
-      Serial.println("<zexecute>");
+      //Serial.println("<zexecute>");
       DrillXZPos(X, Z);
 
       currentX = X;
@@ -76,3 +76,4 @@ switch(switchCom) {
 }
   
 }
+

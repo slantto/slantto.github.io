@@ -41,7 +41,7 @@ def waitForArduino():
     msg = ""
     while msg.find("Arduino is ready") == -1:
 
-        #while ser.in_waiting == 0:
+        #while ser.inWaiting()== 0:
          #   pass
 
         msg = recvFromArduino()
@@ -166,7 +166,7 @@ if __name__ == '__main__':
             Mt = input("Insert Number of minutes to leave heater on(recommend no more than 5)")
             ardcom = "<" + msgfromPi + "," + command + "," + Xmm + "," + Zmm + "," + Mt + ">"
             # print(ardcom)
-            hist = str(datetime.datetime.now()) + " " + ardcom
+            hist = str(datetime.datetime.now()) + " " + ardcom + "\n"
             COMHist.write(hist)
             ser.write(ardcom.encode())
 
@@ -174,7 +174,7 @@ if __name__ == '__main__':
             while msg.find("Drill Operation Complete") == -1:
                 msg = recvFromArduino()
                 print(msg)
-                wpl = str(datetime.datetime.now()) + " " + msg
+                wpl = str(datetime.datetime.now()) + " " + msg +"\n"
                 WPLog.write(wpl)
                 WPLog.flush()
             print(msg)

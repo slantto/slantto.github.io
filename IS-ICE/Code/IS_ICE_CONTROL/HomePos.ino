@@ -6,9 +6,9 @@ void HomePos(){
       }
       while(digitalRead(Y_MIN_PIN) == HIGH){
         digitalWrite(Y_STEP_PIN, HIGH); 
-        delayMicroseconds(1000); 
+        delayMicroseconds(500); 
         digitalWrite(Y_STEP_PIN, LOW); 
-        delayMicroseconds(1000); 
+        delayMicroseconds(500); 
       }
 //bring X home
       if(digitalRead(X_MIN_PIN)== LOW){

@@ -112,20 +112,15 @@ int s;
 int meltime;
 
 float WOB1;
-float WOB2;
-float WOBavg;
-float WOBthresh = -15;
-float WOBmax = -20;
+float WOB2 = 0;
+float WOBavg = 0;
+float WOBthresh = 20;
+float WOBmax = 25;
 float deladj;
 
-int sample;
-double voltage;
-double iPrimary;
-double acc = 0;
-double iRMS;
-double apparentPower;
-
 int capdrop = 0;
+unsigned long tstart = 0;
+  int  readvalue;
 
 void setup() {
 
@@ -175,13 +170,13 @@ void setup() {
 
   digitalWrite(HEATER_1_PIN, LOW);
   digitalWrite(DRILL_DIR_PIN, LOW);
-  analogWrite(DRILL_SPEED_PIN, 255);
-  delay(3000);
-  analogWrite(DRILL_SPEED_PIN, 0);
-  delay(500);
-  digitalWrite(DRILL_DIR_PIN, HIGH);
-  analogWrite(DRILL_SPEED_PIN, 120);
-  delay(3000);
+  //analogWrite(DRILL_SPEED_PIN, 255);
+  //delay(3000);
+  //analogWrite(DRILL_SPEED_PIN, 0);
+  //delay(500);
+  //digitalWrite(DRILL_DIR_PIN, HIGH);
+  //analogWrite(DRILL_SPEED_PIN, 120);
+  //delay(3000);
   //  analogWrite(DRILL_SPEED_PIN, 0);
   digitalWrite(DRILL_SPEED_PIN, LOW);
 

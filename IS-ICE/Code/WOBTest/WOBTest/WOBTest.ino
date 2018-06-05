@@ -126,7 +126,8 @@ double iRMS;
 double apparentPower;
 
 int capdrop = 0;
-
+unsigned long tstart;
+int dir = 1;
 void setup() {
 
   // Sets the two pins as Outputs
@@ -175,9 +176,13 @@ void setup() {
 
   digitalWrite(HEATER_1_PIN, LOW);
   digitalWrite(DRILL_DIR_PIN, LOW);
+  Serial.begin(9600);
 Serial.println("Arduino is ready");
-digitalWrite(Y_DIR_PIN,HIGH);
-float tstart = millis()
+digitalWrite(Y_DIR_PIN,LOW);
+scale2.set_scale();
+  scale2.tare();	//Reset the scale2 to 0
+
+tstart = 0;
 }
 void loop() {
   
@@ -203,15 +208,17 @@ void loop() {
   //  else if(WOBavg >= WOBmax){
     //  delay(2000);
    // }
-   if ((tstart - millis())>1000){ 
+    if ((millis()-tstart)>1000){ 
+     tstart = millis();
+      scale2.set_scale(calibration_factor2); //Adjust to this calibration factor
     // readvalue = (((analogRead(CSENSE_PIN)*5.0)/1024.0)*1000)/mVperAmp;
      //Serial.print("<Amps=");
      //Serial.print(readvalue);
      //Serial.println(">");
-     //WOB1=scale.get_units();
+     //WOB1=scale2.get_units();
      WOB2=scale2.get_units();
      //WOBavg=(WOB1+WOB2)/2;
-     WOBavg = WOB2 ;
+     WOBavg = WOB2 *4;
     
     //Serial.print("<W1=");
     //Serial.print(WOB1);
@@ -220,6 +227,25 @@ void loop() {
     Serial.print(", WA=");
     Serial.print(WOBavg);
     Serial.println(">");
+   }
     
+    if(Serial.available())
+  {
+    char temp = Serial.read();
+    if(temp == 'a')
+      digitalWrite(Y_DIR_PIN,LOW);
+    else if(temp == 'z')
+      digitalWrite(Y_DIR_PIN,HIGH);
   }
+//  if (digitalRead(X_MAX_PIN==LOW)){
+//    if(dir == 1){
+//      digitalWrite(Y_DIR_PIN,HIGH);
+//      dir = 2;
+//    }
+//    else if(dir == 2){
+//      digitalWrite(Y_DIR_PIN,LOW);
+//      dir = 1;
+//    }
+//  }    
+}
 }

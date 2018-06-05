@@ -1,5 +1,4 @@
-void DrillXZPos(float X,float Z)
-{
+void DrillXZPos(float X,float Z){
   
   
   if (X < currentX) {
