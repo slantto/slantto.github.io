@@ -114,9 +114,9 @@ int meltime;
 float WOB1;
 float WOB2;
 float WOBavg;
-float WOBthresh = -15;
-float WOBmax = -20;
-float deladj;
+float WOBthresh = 15;
+float WOBmax = 20;
+float deladj = 500;
 
 int sample;
 double voltage;
@@ -175,157 +175,51 @@ void setup() {
 
   digitalWrite(HEATER_1_PIN, LOW);
   digitalWrite(DRILL_DIR_PIN, LOW);
-  analogWrite(DRILL_SPEED_PIN, 255);
-  delay(3000);
-  analogWrite(DRILL_SPEED_PIN, 0);
-  delay(500);
-  digitalWrite(DRILL_DIR_PIN, HIGH);
-  analogWrite(DRILL_SPEED_PIN, 120);
-  delay(3000);
-  //  analogWrite(DRILL_SPEED_PIN, 0);
-  digitalWrite(DRILL_SPEED_PIN, LOW);
-
-  Serial.begin(9600);
-  // Serial2.begin(9600);
-
-  //attach servo object to pin D11 
-  capservo.attach(11);
-
-  capdrop = 90;
-  capservo.write(capdrop);
-  delay(500);
-  capdrop = 0;
-  capservo.write(capdrop);
-  delay(500);
-
-  //Zero load cell 1
-  scale.set_scale(calibration_factor);
-  scale.tare();
-  //Zero load cell 2
-  scale2.set_scale(calibration_factor2);
-  scale2.tare();
-
-  HomePos();
-  //  ROBOSTATE();
-
-  // tell the PC we are ready
-  Serial.println("<Arduino is ready>");
+Serial.println("Arduino is ready");
+digitalWrite(Y_DIR_PIN,HIGH);
+float tstart = millis()
 }
 void loop() {
-  // // Read ADC, convert to voltage, remove offset
-  // sample = analogRead(A0);
-  // voltage = (sample * 3.3) / 4096;
-  // voltage = voltage - offset;
-  // // Calculate the sensed current
-  // iPrimary = (voltage / rBurden) * numTurns;
-
-  // Serial.println(iPrimary);
-  getDataFromPi();
-
-  replyToPi();
-
-  if (commandReady){
-    commandReady = false;
-    runCommand();
-
-  }
-  // if (Serial.available() > 0) {
-  //   int sercommand = Serial.read();
-  //   switch (sercommand) {
-  //     case '1': //Position drill in X and Z
-  //       Serial.println("Xmm");
-  //       while (Serial.available() == 0) { }
-  //       X = Serial.parseFloat();
-
-  //       Serial.println("Zmm");
-  //       while (Serial.available() == 0) { }
-  //       Z = Serial.parseFloat();
-
-  //       DrillXZPos(X, Z);
-
-
-  //       currentX = X;
-  //       currentZ = Z;
-  //       Serial.println("X = ");
-  //       Serial.print(currentX);
-  //       Serial.println("Z = ");
-  //       Serial.print(currentZ);
-  //       Serial.println("done");
-  //       delay(1000);
-  //       break;
-  //     //Z position and drill speed
-  //     case '2': //position drill in vertical
-  //         Serial.println("Ymm");
-  //       while (Serial.available()==0){ }
-  //       Y = Serial.parseInt();
-
-  //       Serial.println("Speed");
-  //       while (Serial.available()==0){ }
-  //       s = Serial.parseInt();
-
-  //       DrillYPos(Y, s);
-
-  //       currentY = Y;
-
-  //       Serial.println("Y = ");
-  //       Serial.print(currentY);
-  //       Serial.println("done");
-  //       delay(1000); // One second delay
-  //       break;
-  //     case '3': //Drill operation
-  //       Serial.println("Xmm");
-  //       while (Serial.available() == 0) { }
-  //       X = Serial.parseFloat();
-
-  //       Serial.println("Zmm");
-  //       while (Serial.available() == 0) { }
-  //       Z = Serial.parseFloat();
-
-  //       Serial.println("Melt");
-  //       while (Serial.available() == 0) { }
-  //       meltime = Serial.parseFloat();
-
-  //       DRILL_OP(X, Z, meltime);
-
-  //       Serial.println("done");
-  //       break;
-  //     case '4': //turn heater on and off
-  //     if(digitalRead(HEATER_0_PIN)==LOW){
-  //       digitalWrite(HEATER_0_PIN, HIGH);
-  //       Serial.println("Heater ON!");
-  //     }
-  //     else if(digitalRead(HEATER_0_PIN)==HIGH){
-  //       digitalWrite(HEATER_0_PIN, LOW);
-  //       Serial.println("Heater OFF!");}
-
-
-  //       break;
-  //     case '5': //Robot State
-  //       ROBOSTATE();
-  //       break;
-  //     case '6':
-
-  //       break;
-  //   }
-  // }
-}
-float getVPP(){
-  float result;
   
-  int readvalue;
-  int maxvalue = 0;
-  int minvalue = 1024;
-  
-  uint32_t start_time = millis();
-  while((millis() - start_time) < 1000) {
-    readvalue = analogRead(CSENSE_PIN);
-    if (readvalue > maxvalue){
-      maxvalue = readvalue;
-    }
-    if (readvalue < minvalue){
-      minvalue = readvalue;
-    }
+  while(digitalRead(Y_MAX_PIN) == HIGH){
+ //   if ((WOBavg < WOBmax) && (WOBavg < WOBthresh)){
+   //   deladj = 500;
+     // if (WOBavg >= WOBthresh){
+       // deladj = 500 + (100*(abs(WOBthresh) - abs(WOBavg)));
+      //}
+      
+      digitalWrite(Y_STEP_PIN, HIGH); 
+      delayMicroseconds(deladj); 
+      digitalWrite(Y_STEP_PIN, LOW); 
+      delayMicroseconds(deladj); 
+   // }
+    // else if((WOBavg > WOBmax) && (WOBavg <= WOBthresh)){
+    //   deladj = 500 + (100*(abs(WOBthresh) - abs(WOBavg)));
+    //   digitalWrite(Y_STEP_PIN, HIGH); 
+    //   delayMicroseconds(500); 
+    //   digitalWrite(Y_STEP_PIN, LOW); 
+    //   delayMicroseconds(500); 
+    // }
+  //  else if(WOBavg >= WOBmax){
+    //  delay(2000);
+   // }
+   if ((tstart - millis())>1000){ 
+    // readvalue = (((analogRead(CSENSE_PIN)*5.0)/1024.0)*1000)/mVperAmp;
+     //Serial.print("<Amps=");
+     //Serial.print(readvalue);
+     //Serial.println(">");
+     //WOB1=scale.get_units();
+     WOB2=scale2.get_units();
+     //WOBavg=(WOB1+WOB2)/2;
+     WOBavg = WOB2 ;
+    
+    //Serial.print("<W1=");
+    //Serial.print(WOB1);
+    Serial.print(", W2=");
+    Serial.print(WOB2);
+    Serial.print(", WA=");
+    Serial.print(WOBavg);
+    Serial.println(">");
+    
   }
-  result = ((maxvalue - minvalue) * 5.0)/1024.0;
-  return result;
 }

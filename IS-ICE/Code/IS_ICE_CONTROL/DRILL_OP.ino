@@ -30,13 +30,14 @@ void DRILL_OP(float X,float Z, float meltime)
     else if(WOBavg <= WOBmax){
       delay(2000);
     }
-     readvalue = (((analogRead(CSESNSE_PIN)*5.0)/1024.0)*1000)/mVperAmp;
+     readvalue = (((analogRead(CSENSE_PIN)*5.0)/1024.0)*1000)/mVperAmp;
      Serial.print("<Amps=");
      Serial.print(readvalue);
      Serial.println(">");
      WOB1=scale.get_units();
      WOB2=scale2.get_units();
      WOBavg=(WOB1+WOB2)/2;
+     WOBavg = WOB2 * 4;
     // if(WOBavg < -5){
     Serial.print("<W1=");
     Serial.print(abs(WOB1));

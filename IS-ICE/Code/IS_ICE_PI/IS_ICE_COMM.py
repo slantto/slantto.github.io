@@ -41,11 +41,11 @@ def waitForArduino():
     msg = ""
     while msg.find("Arduino is ready") == -1:
 
-        while ser.inWaiting() == 0:
-            pass
+        #while ser.in_waiting == 0:
+         #   pass
 
         msg = recvFromArduino()
-
+        print(msg)
 
     print(msg)
 
@@ -81,6 +81,10 @@ if __name__ == '__main__':
 
     #Wait for arduino to run through startup
     waitForArduino()
+    hist = "Begin Log " + str(datetime.datetime.now()) + "\n"
+    print(hist)
+    COMHist.write(hist)
+    COMHist.flush()
 
     while 1:
         # Check if any alerts
@@ -100,7 +104,10 @@ if __name__ == '__main__':
 
         if command == "h":  # Help
             print("1 = move x and z, 2 = move y, 3 = drill operation, 4 = meltchamber operaton, 5 =  robot state info, X for exit loop")
-
+            hist = str(datetime.datetime.now()) + " help called"
+            print(hist)
+            COMHist.write(hist)
+            COMHist.flush()
         elif command == "secret":  # Secret Menu to be completed later
             print("Welcome to the secret menu, please select a command...")
 
@@ -111,6 +118,7 @@ if __name__ == '__main__':
             print(ardcom)
             hist = str(datetime.datetime.now()) + " " + ardcom
             COMHist.write(hist)
+            COMHist.flush()
             ser.write(ardcom.encode())
 
             msg = ""
@@ -133,7 +141,9 @@ if __name__ == '__main__':
             ardcom = "<" + msgfromPi + "," + command + "," + Ymm + "," + S + "," + CP3 + ">"
             # print(ardcom)
             hist = str(datetime.datetime.now()) + " " + ardcom
+            print(hist)
             COMHist.write(hist)
+            COMHist.flush()
             ser.write(ardcom.encode())
 
             msg = ""
@@ -166,6 +176,7 @@ if __name__ == '__main__':
                 print(msg)
                 wpl = str(datetime.datetime.now()) + " " + msg
                 WPLog.write(wpl)
+                WPLog.flush()
             print(msg)
 
 
@@ -174,37 +185,50 @@ if __name__ == '__main__':
             #print(ardcom)
             hist = str(datetime.datetime.now()) + " " + ardcom
             COMHist.write(hist)
+            COMHist.flush()
             ser.write(ardcom.encode())
 
-            waitingForReply = True
-            while ser.in_waiting == 0:
-                pass
-            dataRecvd = recvFromArduino()
-            hist = str(datetime.datetime.now()) + " " + dataRecvd
-            COMHist.write(hist)
-            print(("Reply Received  " + dataRecvd))
-            waitingForReply = False
+            msg = ""
+            while msg.find("done") == -1:
+                msg = recvFromArduino()
+                print(msg)
+            print(msg)
+            #waitingForReply = True
+            #while ser.in_waiting == 0:
+             #   pass
+            #dataRecvd = recvFromArduino()
+            #hist = str(datetime.datetime.now()) + " " + dataRecvd
+            #COMHist.write(hist)
+            #print(("Reply Received  " + dataRecvd))
+            #waitingForReply = False
 
         elif command == "5":  # Check RobotState(Kinda useless)
             ardcom = "<" + msgfromPi + "," + command + "," + CP1 + "," + CP2 + "," + CP3 + ">"
             #print(ardcom)
             hist = str(datetime.datetime.now()) + " " + ardcom
             COMHist.write(hist)
+            COMHist.flush()
             ser.write(ardcom.encode())
 
-            waitingForReply = True
-            while ser.in_waiting == 0:
-                pass
-            dataRecvd = recvFromArduino()
-            hist = str(datetime.datetime.now()) + " " + dataRecvd
-            COMHist.write(hist)
-            print(("Reply Received  " + dataRecvd))
-            waitingForReply = False
+
+            msg = ""
+            while msg.find("done") == -1:
+                msg = recvFromArduino()
+                print(msg)
+            print(msg)
+            #waitingForReply = True
+            #while ser.in_waiting == 0:
+             #   pass
+            #dataRecvd = recvFromArduino()
+            #hist = str(datetime.datetime.now()) + " " + dataRecvd
+            #COMHist.write(hist)
+            #print(("Reply Received  " + dataRecvd))
+            #waitingForReply = False
 
         elif command == "X":
             ser.close
-            WPLog.close
-            COMHist.close
+            WPLog.close()
+            COMHist.close()
             print("Exiting")
             break
 
@@ -213,18 +237,27 @@ if __name__ == '__main__':
             ardcom = "<" + msgfromPi + "," + command + "," + CP1 + "," + CP2 + "," + CP3 + ">"
             hist = str(datetime.datetime.now()) + " " + ardcom
             COMHist.write(hist)
+            COMHist.flush()
             ser.write(ardcom.encode())
 
-            waitingForReply = True
-            while ser.in_waiting == 0:
-                print("wait for reply")
-                pass
-            dataRecvd = recvFromArduino()
-            hist = str(datetime.datetime.now()) + " " + dataRecvd
-            COMHist.write(hist)
+
+
+            msg = ""
+            while msg.find("done") == -1:
+                msg = recvFromArduino()
+                print(msg)
+            print(msg)
+
+            #waitingForReply = True
+            #while ser.in_waiting == 0:
+            #    print("wait for reply")
+            #    pass
+            #dataRecvd = recvFromArduino()
+            #hist = str(datetime.datetime.now()) + " " + dataRecvd
+            #COMHist.write(hist)
             #print(COMHist.read())
-            print(("Reply Received  " + dataRecvd))
-            waitingForReply = False
+            #print(("Reply Received  " + dataRecvd))
+            #waitingForReply = False
         else:
             print("BAD COMMAND, TRY AGAIN")
 
