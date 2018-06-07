@@ -30,6 +30,7 @@ void DRILL_OP_BUTT() {
     }
 
     if (digitalRead(DRILLD_BUTT) == LOW) {
+      delay(200);
       if (digitalRead(DRILL_DIR_PIN) == LOW) {
         digitalWrite(DRILL_DIR_PIN, HIGH);
         Serial.println("<DRILL FORWARD!>");
@@ -41,6 +42,7 @@ void DRILL_OP_BUTT() {
     }
 
     if (digitalRead(SCREWD_BUTT) == LOW) {
+      delay(200);
       if (digitalRead(Y_DIR_PIN) == LOW) {
         digitalWrite(Y_DIR_PIN, HIGH);
         Serial.println("<DRILL DOWN!>");
@@ -52,7 +54,8 @@ void DRILL_OP_BUTT() {
     }
 
     if (digitalRead(EXTRA_BUTT) == LOW) {
-      delay(2000);
+      delay(200);
+      Serial.println("<PAUSE>");
       while (digitalRead(EXTRA_BUTT) == HIGH) {
         if ((millis() - tstart) > 5000) {
           tstart = millis();
@@ -74,6 +77,8 @@ void DRILL_OP_BUTT() {
       }
     }
     if (digitalRead(DRILLOP_BUTT) == LOW) {
+      delay(200);
+      Serial.println("<EXITING>");
       break;
     }
   }

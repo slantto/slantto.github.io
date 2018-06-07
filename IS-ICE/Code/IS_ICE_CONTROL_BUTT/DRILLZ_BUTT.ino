@@ -18,13 +18,16 @@ void DRILLZ_BUTT() {
     }
 
     if (digitalRead(EXTRA_BUTT) == LOW) {
-      delay(2000);
+      delay(200);
+      Serial.println("<PAUSE>");
       while (digitalRead(EXTRA_BUTT) == HIGH) {
 
       }
     }
 
     if (digitalRead(ZOP_BUTT) == LOW) {
+      delay(200);
+      Serial.println("<EXITING>");
       break;
     }
 

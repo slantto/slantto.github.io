@@ -194,6 +194,7 @@ void setup() {
 
   Serial.begin(9600);
   // Serial2.begin(9600);
+  
 
   //Zero load cell 2
   scale2.set_scale(calibration_factor2);
@@ -207,6 +208,7 @@ void loop() {
  BUTT_STATE();
 
 }
+
 float getVPP() {
   float result;
 
